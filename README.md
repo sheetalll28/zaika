@@ -82,4 +82,7 @@ Zaika stands out by allowing users to contact recipe owners directly within the 
 🍛 Happy Cooking with Zaika! Let your kitchen stories be heard. ❤️
 
 
+### This project is a team project made during summer vacation. 
+- Frontend Developer - Shweta Ahirwar
+- Backend and Database - Sheetal Lodhi
 
