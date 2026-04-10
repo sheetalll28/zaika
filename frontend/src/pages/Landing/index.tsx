@@ -52,40 +52,12 @@ export const Landing = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:4000/auth/join", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      if (onLogin) {
+        await onLogin({
           email: state.email,
           password: state.password,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        return cogoToast.error(data.error || "Authentication failed");
+        });
       }
-
-      // Save data to sessionStorage
-      sessionStorage.setItem("token", data.token);
-      sessionStorage.setItem("email", data.email);
-      sessionStorage.setItem("id", data.id);
-
-      // Trigger context login if needed
-      if (onLogin) onLogin(data);
-
-      // Show success message based on status code
-      if (response.status === 200) {
-        cogoToast.success("Logged in successfully!");
-      } else if (response.status === 201) {
-        cogoToast.success("Registered and logged in successfully!");
-      }
-
-      // Redirect
-      navigate("/dashboard");
     } catch (err: any) {
       console.error(err);
       cogoToast.error("Something went wrong. Please try again.");

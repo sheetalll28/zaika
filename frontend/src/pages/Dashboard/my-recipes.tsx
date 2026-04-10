@@ -79,7 +79,7 @@
 //   );
 // };
 
-import React, { useState, FormEvent, Suspense, useContext, useEffect } from "react";
+import { useState, FormEvent, Suspense, useContext, useEffect } from "react";
 import useSWR from "swr";
 import cogoToast from "cogo-toast";
 
@@ -98,7 +98,7 @@ export const MyRecipes = () => {
   //useswr fetcher
   const fetcher = (url: string) => instance.get(url).then((res) => res.data);
   const { data, error } = useSWR(
-    `http://localhost:4000/recipe/user/${sessionStorage.getItem("id")}`,
+    `/recipe/user/${sessionStorage.getItem("id")}`,
     fetcher,
     {
       suspense: true,

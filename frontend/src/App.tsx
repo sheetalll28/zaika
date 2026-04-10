@@ -5,20 +5,9 @@ import { DashboardLayout } from "./layouts/dashboard";
 import { AddRecipe, Home, More, MyRecipes } from "./pages/Dashboard";
 import { ErrorPage } from "./pages/Error";
 import { Landing } from "./pages/Landing";
-import { AuthenticationContext } from "./context/auth-context";
-import { AUTH_TYPE } from "./@types"; // Assuming you have this type definition
+import { AuthenticationContextProvider } from "./context/auth-context";
 
 function App() {
-  // Authentication context value
-  const authContextValue: AUTH_TYPE = {
-    loading: false,
-    onLogin: async (credentials) => {
-      // Implement your login logic here
-      console.log("Login attempt with:", credentials);
-      return true; // Return true if login successful
-    }
-  };
-
   const router = createBrowserRouter([
     {
       path: "/",
@@ -52,11 +41,11 @@ function App() {
 
   return (
     <div className="min-h-screen w-full overflow-x-hidden">
-      <AuthenticationContext.Provider value={authContextValue}>
+      <AuthenticationContextProvider>
         <Suspense fallback={<UILoader />}>
           <RouterProvider router={router} fallbackElement={<UILoader />} />
         </Suspense>
-      </AuthenticationContext.Provider>
+      </AuthenticationContextProvider>
     </div>
   );
 }

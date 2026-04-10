@@ -1,0 +1,2289 @@
+\documentclass[12pt]{article}
+\usepackage[utf-8]{inputenc}
+\usepackage[margin=0.8in]{geometry}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{textcomp}
+\usepackage{hyperref}
+
+% Code formatting
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    keywordstyle=\color{blue},
+    commentstyle=\color{gray},
+    stringstyle=\color{red},
+    backgroundcolor=\color{lightgray!20},
+    frame=single,
+    rulecolor=\color{orange}
+}
+
+% Header and Footer
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\textcolor{orange}{Zaika Frontend}}
+\lhead{Interview Q\&A Guide}
+\cfoot{\thepage}
+
+% Title Styling
+\titleformat{\section}
+{\normalfont\Large\bfseries\color{orange}}
+{\thesection}{1em}{}
+
+\titleformat{\subsection}
+{\normalfont\large\bfseries\color{darkblue}}
+{\thesubsection}{0.8em}{}
+
+% Color definitions
+\definecolor{darkblue}{RGB}{0, 51, 102}
+\definecolor{orange}{RGB}{255, 140, 0}
+\definecolor{lightgray}{RGB}{240, 240, 240}
+
+\title{\textcolor{orange}{\textbf{Frontend Development Interview Q\&A Guide}}}
+\author{\textcolor{darkblue}{Zaika - Recipe Sharing Application} \\ Complete Answers with Project Context}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{center}
+\textcolor{darkblue}{\textit{Comprehensive guide with detailed, simple explanations for interview preparation}}
+\end{center}
+
+\tableofcontents
+\newpage
+
+%========================= PART 1 =========================
+\section{Project Overview \& Folder Structure}
+
+\subsection{What is Zaika?}
+
+Zaika is a \textbf{recipe sharing web application} built with modern React technology. Think of it like Instagram but for recipes. Users can:
+\begin{itemize}
+    \item Login/Signup with email and password
+    \item View recipes shared by other users
+    \item Add their own recipes with images
+    \item Search for recipes by name
+    \item See recipe details and the creator's information
+\end{itemize}
+
+\subsection{Frontend Folder Structure Explained}
+
+\begin{lstlisting}
+frontend/
+├── src/
+│   ├── components/          # Reusable UI pieces
+│   │   ├── button.tsx       # Buttons used everywhere
+│   │   ├── input.tsx        # Input fields
+│   │   ├── form.tsx         # Form container
+│   │   ├── card.tsx         # Recipe card display
+│   │   ├── search-box.tsx   # Search functionality
+│   │   ├── textarea.tsx     # Text area for descriptions
+│   │   └── loaders/         # Loading spinners
+│   │       ├── ui-loader.tsx
+│   │       └── search-loader.tsx
+│   │
+│   ├── pages/               # Full page components
+│   │   ├── Landing/         # Login/Signup page
+│   │   ├── Dashboard/       # Main app pages
+│   │   │   ├── home.tsx     # Recipe list & search
+│   │   │   ├── add-recipe.tsx
+│   │   │   ├── my-recipes.tsx
+│   │   │   ├── more.tsx     # Recipe details
+│   │   │   └── common/      # Shared page components
+│   │   └── Error/           # Error page (404)
+│   │
+│   ├── layouts/             # Layout wrappers
+│   │   └── dashboard.tsx    # Main layout with sidebar
+│   │
+│   ├── hooks/               # Custom React logic
+│   │   ├── auth.ts          # Login logic
+│   │   └── recipe.ts        # Recipe CRUD operations
+│   │
+│   ├── context/             # Global state
+│   │   └── auth-context.tsx # Authentication state
+│   │
+│   ├── config/              # Configuration files
+│   │   └── axios.ts         # API setup & interceptors
+│   │
+│   ├── @types/              # TypeScript definitions
+│   │   └── index.ts         # All type interfaces
+│   │
+│   ├── utils/               # Helper functions
+│   │   ├── validate-email.ts
+│   │   └── validate-image.ts
+│   │
+│   ├── assets/              # Images and static files
+│   ├── App.tsx              # Main app & routes setup
+│   ├── main.tsx             # Entry point
+│   └── index.css            # Global styles
+│
+├── package.json             # Dependencies
+├── vite.config.ts           # Build configuration
+├── tailwind.config.cjs      # CSS framework config
+└── tsconfig.json            # TypeScript settings
+\end{lstlisting}
+
+\subsection{How Data Flows in Zaika}
+
+\begin{center}
+\textbf{User Journey Flow:}
+\end{center}
+
+\begin{enumerate}
+    \item User opens app → Sees \textbf{Landing page} (login)
+    \item User enters email \& password
+    \item \textbf{axios interceptor} sends request to backend
+    \item Backend validates \& returns token
+    \item Token saved in \textbf{sessionStorage}
+    \item \textbf{AuthenticationContext} updated with user info
+    \item Router redirects to \textbf{/dashboard}
+    \item \textbf{DashboardLayout} renders with sidebar
+    \item User can now navigate to Home, Add Recipe, My Recipes
+    \item \textbf{SWR hook} fetches recipes automatically
+    \item User sees recipe cards rendered by \textbf{RecipeCard component}
+\end{enumerate}
+
+%========================= PART 2 =========================
+\section{Core React Concepts - Questions \& Answers}
+
+\subsection{Q1: What is React and why would you use it for building the Zaika application?}
+
+\subsubsection*{Simple Explanation:}
+
+\textbf{React} is a JavaScript library for building user interfaces. Imagine you're building a website with HTML - every time something changes, you have to manually rewrite the entire page. React automates this.
+
+Think of React like building with \textbf{LEGO blocks}:
+\begin{itemize}
+    \item Each LEGO block is a \textbf{component} (Button, Input, RecipeCard)
+    \item You build bigger structures by combining blocks
+    \item If one block changes, only that block updates (not the whole structure)
+    \item You can reuse the same blocks in many places
+\end{itemize}
+
+\subsubsection*{Why React for Zaika:}
+
+\begin{enumerate}
+    \item \textbf{Reusable Components:} We created one \texttt{Button} component, used it 20+ times (Login button, Logout button, Add Recipe button, etc.)
+    \item \textbf{State Management:} Easy to remember user data (email, recipes, search results) without complications
+    \item \textbf{Virtual DOM:} React automatically detects changes and updates only what changed (super fast)
+    \item \textbf{Large Ecosystem:} Libraries like React Router, SWR, React Icons already exist
+    \item \textbf{Developer Experience:} Hot module reloading, great developer tools, large community
+\end{enumerate}
+
+\subsubsection*{Real Example from Zaika:}
+
+When user types in email input:
+\begin{lstlisting}
+Without React: 
+  1. User types 'a' → Manually update email display
+  2. User types 'b' → Manually update email display
+  3. Repeat for every keystroke
+
+With React:
+  useState("") → Each keystroke → State updates → 
+  Component automatically re-renders with new value
+\end{lstlisting}
+
+---
+
+\subsection{Q2: Explain the difference between functional components and class components. Which one is used in Zaika?}
+
+\subsubsection*{Simple Explanation:}
+
+Think of components as \textbf{recipes}:
+\begin{itemize}
+    \item \textbf{Class Components:} Old way of writing recipes - long, verbose, more rules
+    \item \textbf{Functional Components:} New way - simpler, shorter, easier to understand
+\end{itemize}
+
+\subsubsection*{Zaika Uses: Functional Components}
+
+All files in Zaika use functional components: \texttt{Landing.tsx}, \texttt{DashboardLayout.tsx}, \texttt{Home.tsx}, etc.
+
+\subsubsection*{Comparison:}
+
+\textbf{Class Component Example:}
+\begin{lstlisting}
+class LoginPage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { email: '' };
+  }
+  
+  handleChange = (e) => {
+    this.setState({ email: e.target.value });
+  }
+  
+  render() {
+    return <input onChange={this.handleChange} />
+  }
+}
+\end{lstlisting}
+
+\textbf{Functional Component Example (Zaika style):}
+\begin{lstlisting}
+export const Landing = () => {
+  const [email, setEmail] = useState('');
+  
+  const handleChange = (e) => {
+    setEmail(e.target.value);
+  }
+  
+  return <input onChange={handleChange} />
+}
+\end{lstlisting}
+
+\subsubsection*{Why Zaika uses Functional:}
+\begin{itemize}
+    \item \textbf{Simpler syntax:} Less boilerplate code
+    \item \textbf{Hooks:} useState, useContext, useEffect are easier to use
+    \item \textbf{Modern standard:} React team recommends functional components
+    \item \textbf{Better for learning:} Easier to understand for beginners
+\end{itemize}
+
+---
+
+\subsection{Q3: What is the useState hook and how is it used in the Landing page to manage form state?}
+
+\subsubsection*{Simple Explanation:}
+
+\textbf{useState} is like a \textbf{sticky note} that React remembers. When user types in the email field, we need to "remember" what they typed.
+
+\subsubsection*{Real Example from Landing Page:}
+
+\begin{lstlisting}
+const [state, setState] = useState<_STATE>({ 
+  email: "", 
+  password: "" 
+});
+\end{lstlisting}
+
+This creates a sticky note with:
+\begin{itemize}
+    \item \texttt{state} = current value (initially empty email \& password)
+    \item \texttt{setState} = function to update it
+    \item \texttt{<\_STATE>} = TypeScript type (it must be object with email + password)
+\end{itemize}
+
+\subsubsection*{How it works step-by-step:}
+
+\begin{enumerate}
+    \item User opens Landing page
+    \item useState initializes: \texttt{email: "", password: ""}
+    \item User types "john@gmail.com" in email field
+    \item \texttt{handleState} function runs
+    \item \texttt{setState} updates: \texttt{email: "john@gmail.com", password: ""}
+    \item Component re-renders with new value
+    \item Input field shows "john@gmail.com"
+\end{enumerate}
+
+\subsubsection*{The handleState Function:}
+
+\begin{lstlisting}
+const handleState = (e: FormEvent<HTMLInputElement>) => {
+  const { name, value } = e.currentTarget;
+  setState({ ...state, [name]: value });
+};
+\end{lstlisting}
+
+\textbf{Breaking it down:}
+\begin{itemize}
+    \item \texttt{name} = which field changed? "email" or "password"
+    \item \texttt{value} = what user typed
+    \item \texttt{...state} = keep old values (don't lose password if user typed email)
+    \item \texttt{[name]: value} = update only the field that changed
+\end{itemize}
+
+\textbf{Example:} If state is \texttt{\{email: "", password: "\}} and user types in email:
+\begin{itemize}
+    \item \texttt{\{...state\}} = \texttt{\{email: "", password: ""\}}
+    \item \texttt{[name]: value} = \texttt{email: "john@gmail.com"}
+    \item Result: \texttt{\{email: "john@gmail.com", password: ""\}}
+\end{itemize}
+
+---
+
+\subsection{Q4: Explain what the useContext hook does and how authentication context is implemented in Zaika.}
+
+\subsubsection*{Simple Explanation:}
+
+\textbf{useContext} is like a \textbf{public bulletin board} instead of passing messages hand-to-hand.
+
+\textbf{Without Context (prop drilling):}
+\begin{lstlisting}
+App.tsx (knows user is logged in)
+  → Pass to DashboardLayout
+    → Pass to Header
+      → Pass to UserProfile
+        → Finally use it!
+\end{lstlisting}
+
+This is \textbf{annoying} - passing through 10 components just to reach the one that needs it.
+
+\textbf{With Context:}
+\begin{lstlisting}
+AuthenticationContext (public bulletin board)
+  ↑ 
+UserProfile needs it → useContext(AuthenticationContext) 
+                    → gets it directly!
+\end{lstlisting}
+
+\subsubsection*{How Zaika Implements It:}
+
+\textbf{Step 1: Create Context (context/auth-context.tsx):}
+
+\begin{lstlisting}
+export const AuthenticationContext = 
+  createContext<AUTH_TYPE | null>(null);
+\end{lstlisting}
+
+\textbf{Step 2: Create Provider (AuthenticationContextProvider):}
+
+\begin{lstlisting}
+export const AuthenticationContextProvider = ({ children }) => {
+  const { loading, login } = useAuth();
+  const [user, setUser] = useState<string>("");
+  
+  const onLogin = async (payload) => {
+    const response = await login(payload);
+    sessionStorage.setItem("token", response.token);
+    setUser(response.email);
+    return window.location.href = "/dashboard";
+  };
+  
+  const onLogout = () => {
+    sessionStorage.removeItem("token");
+    return window.location.href = "/";
+  };
+  
+  return (
+    <AuthenticationContext.Provider 
+      value={{ user, loading, onLogin, onLogout }}
+    >
+      {children}
+    </AuthenticationContext.Provider>
+  );
+};
+\end{lstlisting}
+
+\textbf{Step 3: Wrap App (App.tsx):}
+
+\begin{lstlisting}
+<AuthenticationContextProvider>
+  <RouterProvider router={router} />
+</AuthenticationContextProvider>
+\end{lstlisting}
+
+\textbf{Step 4: Use Anywhere (DashboardLayout.tsx):}
+
+\begin{lstlisting}
+const context = useContext(AuthenticationContext);
+const { onLogout, user } = context;
+
+<p>{user}</p>  {/* Display logged-in user */}
+<button onClick={onLogout}>Logout</button>
+\end{lstlisting}
+
+\subsubsection*{What Context Provides:}
+
+\begin{itemize}
+    \item \texttt{user} = logged-in user's email
+    \item \texttt{loading} = is login request happening?
+    \item \texttt{onLogin} = function to login
+    \item \texttt{onLogout} = function to logout
+\end{itemize}
+
+Now \textbf{any component} can access authentication without prop drilling!
+
+---
+
+\subsection{Q5: What is the useLayoutEffect hook and why is it used to protect the Landing page route?}
+
+\subsubsection*{Simple Explanation:}
+
+\textbf{useLayoutEffect} is like a \textbf{bouncer at a club} who checks your ID \textbf{before} the DJ starts playing (before page renders).
+
+\textbf{useEffect vs useLayoutEffect:}
+
+\begin{itemize}
+    \item \texttt{useEffect}: Runs \textbf{after} page renders (can see flicker)
+    \item \texttt{useLayoutEffect}: Runs \textbf{before} page renders (no flicker)
+\end{itemize}
+
+\subsubsection*{Real Example from Landing Page:}
+
+\begin{lstlisting}
+useLayoutEffect(() => {
+  if (
+    !!sessionStorage.getItem("token") &&
+    !!sessionStorage.getItem("email")
+  ) {
+    navigate("/dashboard");
+  }
+}, []);
+\end{lstlisting}
+
+\textbf{What happens:}
+
+\begin{enumerate}
+    \item User is logged in (has token in sessionStorage)
+    \item User tries to visit login page manually
+    \item \textbf{BEFORE} page renders, useLayoutEffect runs
+    \item Checks: "Do you have token? Do you have email?"
+    \item If YES → \texttt{navigate("/dashboard")} (redirect to dashboard)
+    \item User never sees login page (no flicker!)
+\end{enumerate}
+
+\subsubsection*{Why not useEffect?}
+
+\begin{lstlisting}
+With useEffect:
+  1. Login page renders
+  2. User sees: "Zaika | Email | Password | Login button"
+  3. useEffect runs
+  4. Oops, you're logged in! Redirecting...
+  5. Page flickers and changes to dashboard
+  
+With useLayoutEffect:
+  1. useLayoutEffect runs FIRST
+  2. Redirects to dashboard (if logged in)
+  3. Dashboard renders (no flicker)
+\end{lstlisting}
+
+%========================= PART 3 =========================
+\section{React Router and Navigation - Questions \& Answers}
+
+\subsection{Q6: Explain React Router DOM v6 and how routing is configured in the App.tsx file.}
+
+\subsubsection*{Simple Explanation:}
+
+\textbf{React Router} is like a \textbf{GPS navigation system}. It tells React:
+\begin{itemize}
+    \item When user visits "\texttt{/}" → Show Landing page
+    \item When user visits "\texttt{/dashboard}" → Show Dashboard
+    \item When user visits unknown URL → Show Error page
+\end{itemize}
+
+\subsubsection*{How Zaika Routes Work:}
+
+\begin{lstlisting}
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Landing />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/dashboard",
+    element: <DashboardLayout />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: "/dashboard/",
+        element: <Home />,
+      },
+      {
+        path: "/dashboard/addrecipe",
+        element: <AddRecipe />,
+      },
+      {
+        path: "/dashboard/myrecipes",
+        element: <MyRecipes />,
+      },
+      {
+        path: "/dashboard/recipe/:id",
+        element: <More />,
+      },
+    ],
+  },
+]);
+\end{lstlisting}
+
+\textbf{Breaking it down:}
+
+\begin{itemize}
+    \item \texttt{path}: The URL user sees
+    \item \texttt{element}: React component to show
+    \item \texttt{errorElement}: What to show if route doesn't exist
+    \item \texttt{children}: Nested routes (sub-pages within dashboard)
+\end{itemize}
+
+\subsubsection*{Route Map:}
+
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{URL} & \textbf{Component Shown} \\
+\hline
+\texttt{/} & Landing (Login page) \\
+\texttt{/dashboard} & Home (Recipe list) \\
+\texttt{/dashboard/addrecipe} & AddRecipe (Form) \\
+\texttt{/dashboard/myrecipes} & MyRecipes \\
+\texttt{/dashboard/recipe/123} & More (Recipe details) \\
+\texttt{/unknown} & ErrorPage (404) \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsubsection*{Key Concepts:}
+
+\begin{itemize}
+    \item \textbf{Nested Routes:} Children routes share parent layout (sidebar stays visible)
+    \item \textbf{Dynamic Routes:} \texttt{:id} is a placeholder for recipe ID
+    \item \textbf{Error Handling:} If route doesn't exist, show error page
+\end{itemize}
+
+---
+
+\subsection{Q7: What are NavLink and useNavigate hooks? How are they used in the DashboardLayout?}
+
+\subsubsection*{Simple Explanation:}
+
+\begin{itemize}
+    \item \textbf{NavLink:} A clickable link that \textbf{highlights} when you're on that page
+    \item \textbf{useNavigate:} A function that \textbf{redirects} you to a page (like `window.location.href`)
+\end{itemize}
+
+\subsubsection*{NavLink Example from DashboardLayout:}
+
+\begin{lstlisting}
+const routes = [
+  { name: "Home", to: "/dashboard" },
+  { name: "Add Recipe", to: "/dashboard/addrecipe" },
+  { name: "My Recipes", to: "/dashboard/myrecipes" },
+];
+
+{routes.map(({ name, to }) => (
+  <NavLink
+    to={to}
+    className={({ isActive }) =>
+      isActive && pathname === to
+        ? "text-white font-thin bg-orange-500 p-4"  // Highlighted
+        : "text-white font-thin hover:bg-orange-500 p-4"  // Normal
+    }
+  >
+    {name}
+  </NavLink>
+))}
+\end{lstlisting}
+
+\textbf{What it does:}
+
+\begin{enumerate}
+    \item Creates links to Home, Add Recipe, My Recipes
+    \item When you're on "Home" → link gets orange background (active)
+    \item When you click "Add Recipe" → navigates there and highlights it
+    \item When you hover → orange background (hover effect)
+\end{enumerate}
+
+\subsubsection*{useNavigate Example:}
+
+\begin{lstlisting}
+const navigate = useNavigate();
+
+const handleLogout = () => {
+  onLogout();  // Clear auth data
+};
+
+// After logging out, redirect to home:
+navigate("/");  // Go to login page
+\end{lstlisting}
+
+\textbf{When useNavigate is used:}
+
+\begin{itemize}
+    \item After successful login → \texttt{navigate("/dashboard")}
+    \item After logout → \texttt{navigate("/")}
+    \item After creating recipe → \texttt{navigate("/dashboard/myrecipes")}
+\end{itemize}
+
+---
+
+\subsection{Q8: What is the Outlet component and what role does it play in the DashboardLayout?}
+
+\subsubsection*{Simple Explanation:}
+
+\textbf{Outlet} is like a \textbf{placeholder} or \textbf{hole in the wall} where child pages insert themselves.
+
+\textbf{Without Outlet:} You'd need to copy-paste sidebar code in every page (Home, AddRecipe, MyRecipes)
+
+\textbf{With Outlet:} Sidebar stays fixed, only the middle content changes
+
+\subsubsection*{Visual Example:}
+
+\begin{lstlisting}
+DashboardLayout structure:
+┌─────────────────────────────────────┐
+│ Header (Zaika Logo)                 │
+├──────────────┬──────────────────────┤
+│              │                      │
+│   Sidebar    │   <Outlet />         │
+│   (Fixed)    │   (Changes based on  │
+│              │    current route)    │
+│  - Home      │                      │
+│  - Add       │  If /dashboard/      │
+│    Recipe    │  → Shows Home.tsx    │
+│  - My        │                      │
+│    Recipes   │  If /dashboard/      │
+│  - Logout    │  addrecipe           │
+│              │  → Shows AddRecipe   │
+└──────────────┴──────────────────────┘
+\end{lstlisting}
+
+\subsubsection*{Code Example:}
+
+\begin{lstlisting}
+export const DashboardLayout = () => {
+  return (
+    <div className="w-full h-full">
+      {/* Header */}
+      <div className="h-[60px] bg-zinc-900 flex items-center">
+        <h2>Zaika</h2>
+      </div>
+      
+      <div className="flex">
+        {/* Sidebar */}
+        <div className="w-[20%] bg-zinc-900">
+          <NavLink to="/dashboard">Home</NavLink>
+          <NavLink to="/dashboard/addrecipe">Add Recipe</NavLink>
+          <NavLink to="/dashboard/myrecipes">My Recipes</NavLink>
+        </div>
+        
+        {/* This is where child pages appear */}
+        <div className="w-[80%]">
+          <Outlet />  {/* Home or AddRecipe or MyRecipes */}
+        </div>
+      </div>
+    </div>
+  );
+};
+\end{lstlisting}
+
+\textbf{What renders in <Outlet />:}
+
+\begin{itemize}
+    \item \texttt{/dashboard/} → \texttt{<Home />}
+    \item \texttt{/dashboard/addrecipe} → \texttt{<AddRecipe />}
+    \item \texttt{/dashboard/myrecipes} → \texttt{<MyRecipes />}
+    \item \texttt{/dashboard/recipe/123} → \texttt{<More />}
+\end{itemize}
+
+---
+
+\subsection{Q9: How does the dynamic route parameter \texttt{:id} work in the recipe details page? Give an example.}
+
+\subsubsection*{Simple Explanation:}
+
+\textbf{:id} is like a \textbf{wildcard} that captures whatever comes after \texttt{/recipe/}
+
+\begin{itemize}
+    \item \texttt{/recipe/123} → id = "123"
+    \item \texttt{/recipe/abc} → id = "abc"
+    \item \texttt{/recipe/recipe-chicken} → id = "recipe-chicken"
+\end{itemize}
+
+\subsubsection*{How it works in Zaika:}
+
+\textbf{Step 1: Define route with :id}
+
+\begin{lstlisting}
+{
+  path: "/dashboard/recipe/:id",
+  element: <More />,
+}
+\end{lstlisting}
+
+\textbf{Step 2: User clicks recipe card}
+
+\begin{lstlisting}
+// RecipeCard shows each recipe
+// When clicked, navigate to details page
+<div onClick={() => navigate(`/dashboard/recipe/${recipe._id}`)}>
+  <h3>{recipe.title}</h3>
+  <p>{recipe.description}</p>
+</div>
+\end{lstlisting}
+
+URL changes to: \texttt{/dashboard/recipe/507f1f77bcf86cd799439011}
+
+\textbf{Step 3: More.tsx extracts the ID}
+
+\begin{lstlisting}
+import { useParams } from "react-router-dom";
+
+export const More = () => {
+  const { id } = useParams();
+  // id = "507f1f77bcf86cd799439011"
+  
+  // Fetch recipe with this ID
+  const recipe = await fetchRecipe(id);
+  
+  return (
+    <div>
+      <h1>{recipe.title}</h1>
+      <img src={recipe.image.url} />
+      <p>{recipe.description}</p>
+      <p>By: {recipe.user.email}</p>
+    </div>
+  );
+};
+\end{lstlisting}
+
+\textbf{Flow:}
+
+\begin{enumerate}
+    \item User clicks "Chicken Biryani" card
+    \item URL: \texttt{/dashboard/recipe/507f1f77bcf86cd799439011}
+    \item Router matches pattern \texttt{/dashboard/recipe/:id}
+    \item Renders \texttt{<More />}
+    \item \texttt{useParams()} gets id: "507f1f77bcf86cd799439011"
+    \item Fetches and displays that specific recipe
+\end{enumerate}
+
+---
+
+\subsection{Q10: How would you implement route protection to ensure only authenticated users can access the dashboard?}
+
+\subsubsection*{Simple Explanation:}
+
+\textbf{Route Protection} = "You can't enter the club without a membership card"
+
+Unauthenticated users should NOT access dashboard. If they try, redirect to login.
+
+\subsubsection*{Method 1: Using useLayoutEffect (Current Zaika Approach):}
+
+\begin{lstlisting}
+export const DashboardLayout = () => {
+  const navigate = useNavigate();
+  
+  useLayoutEffect(() => {
+    if (!sessionStorage.getItem("token") && 
+        !sessionStorage.getItem("email")) {
+      navigate("/");  // Redirect to login
+    }
+  }, [navigate]);
+  
+  return (
+    <div>
+      {/* Dashboard content */}
+    </div>
+  );
+};
+\end{lstlisting}
+
+\textbf{How it works:}
+
+\begin{enumerate}
+    \item User tries to visit \texttt{/dashboard} without logging in
+    \item \texttt{useLayoutEffect} runs BEFORE page renders
+    \item Checks: "Do you have token and email?"
+    \item If NO → \texttt{navigate("/")} (go to login)
+    \item User sees login page instead
+\end{enumerate}
+
+\subsubsection*{Method 2: Using Protected Route Component (Best Practice):}
+
+\begin{lstlisting}
+// Create ProtectedRoute component
+const ProtectedRoute = ({ element }: { element: JSX.Element }) => {
+  const token = sessionStorage.getItem("token");
+  
+  if (!token) {
+    return <Navigate to="/" />;
+  }
+  
+  return element;
+};
+
+// In App.tsx
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Landing />,
+  },
+  {
+    path: "/dashboard",
+    element: <ProtectedRoute element={<DashboardLayout />} />,
+    children: [...]
+  },
+]);
+\end{lstlisting}
+
+\subsubsection*{Method 3: Using axios interceptors (Double Protection):}
+
+\begin{lstlisting}
+// In config/axios.ts
+instance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response.status === 401) {
+      // Server says "You're not authenticated"
+      sessionStorage.clear();
+      cogoToast.warn("Session timed out");
+      window.location.href = "/";
+    }
+    return Promise.reject(error);
+  }
+);
+\end{lstlisting}
+
+\textbf{This prevents:} Accessing dashboard with expired/invalid token
+
+\subsubsection*{Best Approach - Combine All Three:}
+
+\begin{enumerate}
+    \item Check before rendering (useLayoutEffect)
+    \item Check with Protected Route wrapper
+    \item Check on every API request (axios interceptor)
+    \item Results: \textbf{Triple protected!}
+\end{enumerate}
+
+%========================= PART 4 =========================
+\section{State Management and Authentication - Questions \& Answers}
+
+\subsection{Q11: Describe the complete authentication flow in Zaika from login to accessing the dashboard.}
+
+\subsubsection*{Complete Step-by-Step Flow:}
+
+\textbf{STEP 1: User Opens App}
+
+\begin{lstlisting}
+App.tsx renders
+→ Creates router with routes
+→ Wraps with AuthenticationContextProvider
+→ Renders Landing page
+\end{lstlisting}
+
+\textbf{STEP 2: User Sees Landing Page}
+
+\begin{lstlisting}
+Landing component checks:
+"Do you have token in sessionStorage?"
+→ If YES: Redirect to /dashboard
+→ If NO: Show login form
+\end{lstlisting}
+
+\textbf{STEP 3: User Enters Email \& Password}
+
+\begin{lstlisting}
+User types: john@gmail.com | password123
+
+handleState runs on each keystroke:
+→ state = { email: "john@gmail.com", password: "password123" }
+→ useState updates → Input field shows text
+\end{lstlisting}
+
+\textbf{STEP 4: User Clicks Login Button}
+
+\begin{lstlisting}
+handleSubmit function runs:
+
+1. Validate email format (must have @, proper format)
+2. Validate password (can't be empty)
+3. Send POST request:
+   POST http://localhost:4000/auth/join
+   Body: { email: "john@gmail.com", password: "password123" }
+\end{lstlisting}
+
+\textbf{STEP 5: Backend Validates \& Responds}
+
+\begin{lstlisting}
+Backend checks:
+1. User exists in database?
+2. Password matches?
+
+If correct:
+  → Status: 200 or 201
+  → Response: {
+      token: "eyJhbGciOiJIUzI1NiIs...",
+      email: "john@gmail.com",
+      id: "507f1f77bcf86cd799439011"
+    }
+
+If wrong:
+  → Status: 400 or 401
+  → Response: { error: "Invalid credentials" }
+\end{lstlisting}
+
+\textbf{STEP 6: Frontend Handles Response}
+
+\begin{lstlisting}
+if (!response.ok) {
+  // Login failed
+  cogoToast.error("Authentication failed");
+  return;
+}
+
+// Login successful!
+sessionStorage.setItem("token", data.token);
+sessionStorage.setItem("email", data.email);
+sessionStorage.setItem("id", data.id);
+\end{lstlisting}
+
+\textbf{STEP 7: Update AuthenticationContext}
+
+\begin{lstlisting}
+onLogin(data) is called
+
+This triggers AuthenticationContextProvider:
+→ setUser(response.email)
+→ AuthenticationContext value updated
+→ All components using useContext get new user data
+\end{lstlisting}
+
+\textbf{STEP 8: Redirect to Dashboard}
+
+\begin{lstlisting}
+navigate("/dashboard");
+
+Router matches /dashboard path
+→ Renders DashboardLayout component
+→ DashboardLayout checks: "Do you have token?"
+→ YES! (just saved it) → Show dashboard
+\end{lstlisting}
+
+\textbf{STEP 9: Dashboard Renders}
+
+\begin{lstlisting}
+DashboardLayout shows:
+- Header with "Zaika" logo
+- Sidebar with navigation links
+- User email displayed
+- <Outlet /> renders Home component
+- Home component uses SWR to fetch recipes
+→ Recipes appear on screen
+\end{lstlisting}
+
+\textbf{STEP 10: User Makes API Requests}
+
+\begin{lstlisting}
+When user clicks "My Recipes":
+→ Axios interceptor runs BEFORE request
+→ Adds Authorization header:
+   Authorization: "Bearer eyJhbGciOiJIUzI1NiIs..."
+→ Request sent to backend
+→ Backend validates token (is it real? Not expired?)
+→ If valid: Returns user's recipes
+→ If invalid (401): Interceptor catches it
+   → Clear sessionStorage
+   → Show "Session timed out" warning
+   → Redirect to login
+\end{lstlisting}
+
+\subsubsection*{Complete Visual Flow:}
+
+\begin{center}
+\begin{lstlisting}
+┌─────────────────────────────────────────────┐
+│ User Opens App                              │
+└──────────────────┬──────────────────────────┘
+                   │
+                   ▼
+┌─────────────────────────────────────────────┐
+│ Landing Page (Check if logged in?)          │
+│ ✗ No token → Show login form                │
+│ ✓ Has token → Redirect to dashboard         │
+└──────────────────┬──────────────────────────┘
+                   │
+                   ▼ (No token, show form)
+┌─────────────────────────────────────────────┐
+│ User Enters Email & Password                │
+│ ✓ Validates format                          │
+└──────────────────┬──────────────────────────┘
+                   │
+                   ▼
+┌─────────────────────────────────────────────┐
+│ POST /auth/join (Backend)                   │
+│ Backend validates credentials               │
+└──────────────────┬──────────────────────────┘
+                   │
+        ┌──────────┴──────────┐
+        ▼                     ▼
+    ✓ Valid             ✗ Invalid
+    Status 200          Status 401
+    │                   │
+    ▼                   ▼
+Save to          Show error
+sessionStorage   "Invalid creds"
+│
+▼
+Update Context
+(user = john@gmail.com)
+│
+▼
+navigate("/dashboard")
+│
+▼
+DashboardLayout renders
+│
+▼
+Sidebar + Header + Home page
+│
+▼
+SWR fetches recipes
+│
+▼
+RecipeCards render
+│
+▼
+User can interact with app! ✅
+\end{lstlisting}
+\end{center}
+
+---
+
+\subsection{Q12: What is sessionStorage and how is it used to persist authentication tokens in Zaika?}
+
+\subsubsection*{Simple Explanation:}
+
+\textbf{sessionStorage} is like a \textbf{clipboard} attached to your browser. It remembers things while your tab is open but forgets when you close it.
+
+\textbf{Browser Storage Comparison:}
+
+\begin{center}
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{Type} & \textbf{Cleared on} & \textbf{Size Limit} & \textbf{Usage} \\
+\hline
+localStorage & Never (manual) & 5-10 MB & Persistent data \\
+sessionStorage & Tab close & 5-10 MB & Session data \\
+Cookies & Expiration & 4 KB & HTTP requests \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsubsection*{How Zaika Uses sessionStorage:}
+
+\textbf{Saving after login (Landing.tsx):}
+
+\begin{lstlisting}
+sessionStorage.setItem("token", data.token);
+sessionStorage.setItem("email", data.email);
+sessionStorage.setItem("id", data.id);
+
+// Now stored as:
+// sessionStorage = {
+//   token: "eyJhbGciOiJIUzI1NiIs...",
+//   email: "john@gmail.com",
+//   id: "507f1f77bcf86cd799439011"
+// }
+\end{lstlisting}
+
+\textbf{Using token in requests (config/axios.ts):}
+
+\begin{lstlisting}
+instance.interceptors.request.use((config) => {
+  let authState = window.sessionStorage.getItem("token");
+  config.headers.Authorization = `Bearer ${authState}`;
+  return config;
+});
+
+// Every request now includes:
+// Authorization: "Bearer eyJhbGciOiJIUzI1NiIs..."
+\end{lstlisting}
+
+\textbf{Checking if logged in (DashboardLayout.tsx):}
+
+\begin{lstlisting}
+useLayoutEffect(() => {
+  if (!sessionStorage.getItem("token") && 
+      !sessionStorage.getItem("email")) {
+    navigate("/");  // Not logged in, go to login
+  }
+}, [navigate]);
+\end{lstlisting}
+
+\textbf{Clearing on logout (auth-context.tsx):}
+
+\begin{lstlisting}
+const onLogout = () => {
+  sessionStorage.removeItem("token");
+  sessionStorage.removeItem("email");
+  sessionStorage.removeItem("id");
+  return window.location.href = "/";  // Go to login
+};
+\end{lstlisting}
+
+\subsubsection*{Real-World Timeline:}
+
+\begin{enumerate}
+    \item 9:00 AM - User logs in
+    \item Token saved to sessionStorage
+    \item User browses recipes, sessionStorage still has token
+    \item User closes browser tab
+    \item 9:15 AM - User opens browser again
+    \item sessionStorage is EMPTY (cleared when tab closed)
+    \item User must login again
+\end{enumerate}
+
+\subsubsection*{Why sessionStorage and not localStorage?}
+
+\begin{itemize}
+    \item \textbf{Security:} sessionStorage auto-clears on tab close
+    \item \textbf{Privacy:} Other tabs can't access sessionStorage from different domains
+    \item \textbf{Safety:} If computer is stolen, token is gone when tab closes
+    \item \textbf{User control:} User doesn't have to logout, just close tab
+\end{itemize}
+
+---
+
+\subsection{Q13: Explain the AuthenticationContext provides and how it avoids prop drilling.}
+
+\subsubsection*{Simple Explanation - The Problem:}
+
+Imagine you have a family of 5 people across 3 rooms:
+
+\begin{lstlisting}
+Living Room (Mom knows it's her birthday)
+  ↓ Tells Dad (goes to Kitchen)
+    ↓ Dad tells Uncle (goes to Bedroom)
+      ↓ Uncle tells Cousin
+        ↓ Cousin finally knows!
+
+This is "prop drilling" - passing through multiple people!
+\end{lstlisting}
+
+\textbf{Zaika without Context:}
+
+\begin{lstlisting}
+App.tsx knows: user = "john@gmail.com"
+  ↓ Pass to DashboardLayout
+    ↓ Pass to Header
+      ↓ Pass to UserProfile
+        ↓ Pass to Avatar
+
+<App>
+  <DashboardLayout user={user}>
+    <Header user={user}>
+      <UserProfile user={user}>
+        <Avatar user={user} />
+      </UserProfile>
+    </Header>
+  </DashboardLayout>
+</App>
+\end{lstlisting}
+
+\textbf{Problem:} If DashboardLayout needs user, Header needs user, but UserProfile doesn't, you still have to pass through it!
+
+\subsubsection*{Solution - Using Context:}
+
+\begin{lstlisting}
+// Put user info on "public bulletin board" (Context)
+<AuthenticationContext.Provider value={{ user, onLogin, onLogout }}>
+  <App>
+    <DashboardLayout>
+      {/* DashboardLayout can directly access context */}
+      <Header>
+        <UserProfile>
+          {/* UserProfile can directly access context without 
+              receiving props from parents */}
+          <Avatar />
+        </UserProfile>
+      </Header>
+    </DashboardLayout>
+  </App>
+</AuthenticationContext.Provider>
+\end{lstlisting}
+
+\textbf{Now:} Any component can grab user data directly!
+
+\subsubsection*{Real Example from Zaika:}
+
+\textbf{DashboardLayout (uses context):}
+
+\begin{lstlisting}
+export const DashboardLayout = () => {
+  const { onLogout, user } = useContext(AuthenticationContext);
+  // Got user directly! No props needed!
+  
+  return (
+    <div>
+      <div>
+        <p className="text-orange-500">{user}</p>
+        {/* Shows: john@gmail.com */}
+      </div>
+      <button onClick={onLogout}>Logout</button>
+    </div>
+  );
+};
+\end{lstlisting}
+
+No prop drilling! Just \texttt{useContext}.
+
+\subsubsection*{What Context Provides:}
+
+\begin{lstlisting}
+{
+  user: "john@gmail.com",      // Current user email
+  loading: false,               // Is login happening?
+  onLogin: async (credentials) => {...},  // Login function
+  onLogout: () => {...}         // Logout function
+}
+\end{lstlisting}
+
+\subsubsection*{Benefits:}
+
+\begin{enumerate}
+    \item \textbf{No Prop Drilling:} Don't have to pass through all components
+    \item \textbf{Cleaner Code:} Components only receive props they need
+    \item \textbf{Maintainability:} Adding new context value doesn't break all components
+    \item \textbf{Global State:} Entire app accesses same authentication data
+\end{enumerate}
+
+---
+
+\subsection{Q14: How are axios interceptors configured and what do they do in the config/axios.ts file?}
+
+\subsubsection*{Simple Explanation:}
+
+\textbf{Interceptors} are like \textbf{custom inspectors} that check every request and response.
+
+\begin{lstlisting}
+Request Interceptor: ✓ Check → Add auth token → Send to backend
+Response Interceptor: ✓ Backend responds → Check status → Show message
+\end{lstlisting}
+
+\subsubsection*{Request Interceptor (Add Token to Every Request):}
+
+\begin{lstlisting}
+instance.interceptors.request.use(
+  (config) => {
+    let authState = window.sessionStorage.getItem("token");
+    config.headers.Authorization = `Bearer ${authState}`;
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+\end{lstlisting}
+
+\textbf{What it does:}
+
+\begin{enumerate}
+    \item Before every request, this runs
+    \item Gets token from sessionStorage
+    \item Adds it to request header: \texttt{Authorization: "Bearer <token>"}
+    \item Sends modified request
+\end{enumerate}
+
+\textbf{Real Example:}
+
+\begin{lstlisting}
+// Frontend code:
+instance.get("/recipe");
+
+// Interceptor adds token:
+GET /recipe
+Headers: {
+  Authorization: "Bearer eyJhbGciOiJIUzI1NiIs..."
+}
+
+// Backend receives authenticated request
+// Validates token
+// If valid: Returns user's recipes
+\end{lstlisting}
+
+\subsubsection*{Success Response Interceptor (Handle Success):}
+
+\begin{lstlisting}
+instance.interceptors.response.use(
+  (response) => {
+    if (response.status === 200) {
+      if (response.data.message) {
+        cogoToast.success(response.data.message);
+      }
+    }
+    return response;
+  },
+  (error) => {
+    if (!error?.response?.data) return;
+    if (error.response.status >= 300) {
+      cogoToast.error(
+        error.response.data.error || "Check your internet"
+      );
+    }
+    return Promise.reject(error);
+  }
+);
+\end{lstlisting}
+
+\textbf{What it does:}
+
+\begin{itemize}
+    \item If response is 200 (success) → Show success toast
+    \item If response is error → Show error toast automatically
+    \item Don't have to write error handling in every component!
+\end{itemize}
+
+\textbf{Example:}
+
+\begin{lstlisting}
+// Without interceptor (have to handle every time):
+try {
+  const response = await instance.post("/recipe", data);
+  cogoToast.success("Recipe created!");
+} catch (error) {
+  cogoToast.error(error.message);
+}
+
+// With interceptor (automatic):
+const response = await instance.post("/recipe", data);
+// Toast automatically shown!
+\end{lstlisting}
+
+\subsubsection*{Error Response Interceptor (Handle 401):}
+
+\begin{lstlisting}
+instance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response.status === 401) {
+      sessionStorage.clear();
+      cogoToast.warn("Session timed out");
+      window.location.href = "/";
+    }
+    return Promise.reject(error);
+  }
+);
+\end{lstlisting}
+
+\textbf{What it does:}
+
+\begin{enumerate}
+    \item If backend returns 401 (unauthorized/expired token)
+    \item Clear sessionStorage (remove old token)
+    \item Show "Session timed out" warning
+    \item Redirect to login page
+\end{enumerate}
+
+\textbf{Real Scenario:}
+
+\begin{lstlisting}
+1. User logged in at 9 AM
+2. User takes a break for 2 hours
+3. User tries to fetch recipes at 11 AM
+4. Token expired 1 hour ago
+5. Backend returns: 401 Unauthorized
+6. Interceptor catches it
+7. Clears sessionStorage (remove token)
+8. Shows: "Session timed out"
+9. Redirects to login
+10. User sees login page
+\end{lstlisting}
+
+\subsubsection*{Summary of All Interceptors:}
+
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Interceptor} & \textbf{When} & \textbf{What It Does} \\
+\hline
+Request & Before sending & Add token to header \\
+Response Success & After 200 response & Show success toast \\
+Response Error & After 4xx/5xx & Show error toast \\
+Response 401 & Token expired & Clear storage, redirect \\
+\hline
+\end{tabular}
+\end{center}
+
+---
+
+\subsection{Q15: What happens when a user's session expires (401 error)? How is this handled?}
+
+\subsubsection*{Simple Explanation:}
+
+Think of token like a \textbf{concert ticket}. After the concert ends (token expires), your ticket is no longer valid.
+
+\subsubsection*{Timeline of Session Expiry:}
+
+\begin{enumerate}
+    \item \textbf{9:00 AM} - User logs in
+    \item Backend issues token with expiration: 12:00 PM
+    \item Token stored in sessionStorage
+    \item \textbf{11:50 AM} - User is browsing recipes (still in the app)
+    \item Token still valid, requests work fine
+    \item \textbf{12:05 PM} - User clicks "My Recipes"
+    \item Frontend sends: GET /myrecipes with old token
+    \item Axios interceptor automatically adds:
+    \begin{lstlisting}
+Authorization: "Bearer <expired-token>"
+    \end{lstlisting}
+    \item Backend checks token
+    \item Token expired! Status: 401
+    \item Backend response: \texttt{\{error: "Token expired"\}}
+\end{enumerate}
+
+\subsubsection*{How Frontend Handles 401:}
+
+\begin{lstlisting}
+// axios.ts Response Interceptor
+instance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response.status === 401) {
+      // STEP 1: Clear all auth data
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("email");
+      sessionStorage.removeItem("id");
+      
+      // STEP 2: Show warning message
+      cogoToast.warn("Session timed out");
+      
+      // STEP 3: Redirect to login
+      window.location.href = "/";
+    }
+    return Promise.reject(error);
+  }
+);
+\end{lstlisting}
+
+\subsubsection*{What User Sees:}
+
+\begin{lstlisting}
+┌─────────────────────────────────┐
+│ User viewing recipes on page    │
+│ [Home] [Add Recipe] [My Recipes]│
+│                                 │
+│ Clicks "My Recipes"             │
+└────────────┬────────────────────┘
+             │
+             ▼ (Page loading)
+┌─────────────────────────────────┐
+│ Fetching your recipes...        │
+│ (Behind the scenes: 401 error)  │
+└────────────┬────────────────────┘
+             │
+             ▼ (Toast appears)
+┌─────────────────────────────────┐
+│ ⚠ Session timed out             │ ← Yellow warning
+│                                 │
+│ Page redirects...               │
+└────────────┬────────────────────┘
+             │
+             ▼
+┌─────────────────────────────────┐
+│ Zaika                           │
+│                                 │
+│ Email: [________]               │ ← Login page
+│ Password: [________]            │
+│ [Login]                         │
+│                                 │
+│ "You were logged out. Please    │
+│  login again."                  │
+└─────────────────────────────────┘
+\end{lstlisting}
+
+\subsubsection*{Code Walkthrough:}
+
+\begin{lstlisting}
+// 1. User is on dashboard (has valid token)
+const Dashboard = () => {
+  useEffect(() => {
+    const response = await instance.get("/recipe");
+    // Request interceptor adds token
+    // GET /recipe
+    // Authorization: Bearer <token>
+  }, []);
+};
+
+// 2. Token expires on backend
+// Backend: "This token expired at 12:00 PM, it's now 12:05 PM"
+// Backend returns: 401 Unauthorized
+
+// 3. Response interceptor catches 401
+if (error.response.status === 401) {
+  // Token is invalid/expired
+  sessionStorage.clear();  // Remove token
+  cogoToast.warn("Session timed out");
+  window.location.href = "/";  // Go to login
+}
+
+// 4. User sees login page again
+\end{lstlisting}
+
+\subsubsection*{Why This Matters:}
+
+\begin{itemize}
+    \item \textbf{Security:} Prevents unauthorized access after session expires
+    \item \textbf{User Experience:} Clear message instead of silent failure
+    \item \textbf{Data Protection:} If computer left unattended, session auto-expires
+    \item \textbf{Fresh Token:} User logs in again to get a new token
+\end{itemize}
+
+%========================= PART 5 =========================
+\section{TypeScript and Type Safety - Questions \& Answers}
+
+\subsection{Q16: What is TypeScript and why is it beneficial for the Zaika project?}
+
+\subsubsection*{Simple Explanation:}
+
+\textbf{TypeScript} is like a \textbf{spell-checker for code}. It catches mistakes before the code runs.
+
+\textbf{JavaScript:}
+\begin{lstlisting}
+const user = "john";
+user.toUppercase();  // Runs, but WRONG! Should be toUpperCase()
+// Result: undefined (silent failure)
+\end{lstlisting}
+
+\textbf{TypeScript:}
+\begin{lstlisting}
+const user: string = "john";
+user.toUppercase();  
+// ERROR! "Property 'toUppercase' does not exist on type 'string'"
+// (Caught BEFORE running!)
+\end{lstlisting}
+
+\subsubsection*{Benefits for Zaika:}
+
+\begin{enumerate}
+    \item \textbf{Catch Errors Early:} Typos, wrong types, missing properties caught at compile time
+    \item \textbf{Self-Documenting:} Code is clearer about what types are expected
+    \item \textbf{IDE Support:} Better autocomplete, suggestions, refactoring
+    \item \textbf{Refactoring Safety:} Change one function, IDE shows all places affected
+    \item \textbf{Team Collaboration:} Everyone knows what types to expect
+\end{enumerate}
+
+\subsubsection*{TypeScript in Zaika:}
+
+\textbf{Example 1 - Function Parameters:}
+
+\begin{lstlisting}
+// TypeScript knows exactly what to expect
+const handleState = (e: FormEvent<HTMLInputElement>) => {
+  const { name, value } = e.currentTarget;
+  setState({ ...state, [name]: value });
+};
+
+// If you accidentally pass wrong type:
+handleState(123);  // ERROR! Expected FormEvent, got number
+\end{lstlisting}
+
+\textbf{Example 2 - Type Interfaces:}
+
+\begin{lstlisting}
+type _STATE = {
+  email: string;
+  password: string;
+};
+
+const [state, setState] = useState<_STATE>({
+  email: "",
+  password: ""
+});
+
+// TypeScript prevents wrong data:
+setState({ email: "john", age: 25 });  
+// ERROR! 'age' is not in _STATE
+\end{lstlisting}
+
+\textbf{Example 3 - API Response Types:}
+
+\begin{lstlisting}
+interface ILOGINRESPONSE {
+  email: string;
+  token: string;
+  id: string;
+}
+
+const response = await login();
+// TypeScript knows response has email, token, id
+console.log(response.email);  ✓ Works
+console.log(response.address);  ✗ ERROR! Not in interface
+\end{lstlisting}
+
+---
+
+\subsection{Q17: Examine the AUTH\_TYPE interface. Why is it important to define types for context values?}
+
+\subsubsection*{AUTH\_TYPE Interface:}
+
+\begin{lstlisting}
+export interface AUTH_TYPE {
+  user: string;                              // Current user email
+  loading: boolean;                          // Is login happening?
+  onLogin: (payload: IPAYLOAD) => void;     // Login function
+  onLogout: () => void;                     // Logout function
+}
+
+export interface IPAYLOAD {
+  email: string;
+  password: string;
+}
+\end{lstlisting}
+
+\subsubsection*{Why Important for Context:}
+
+\textbf{Problem Without Types:}
+
+\begin{lstlisting}
+// Without interface, TypeScript doesn't know what context has
+const context = useContext(AuthenticationContext);
+
+context.user;      // Is this string? object? unknown!
+context.onLogin();  // What parameters does it take?
+context.logOuts();  // Typo! But TS doesn't catch it
+
+// Results in runtime errors
+\end{lstlisting}
+
+\textbf{Solution With Types:}
+
+\begin{lstlisting}
+// With interface, TypeScript knows EXACTLY what's in context
+const context = useContext(AuthenticationContext) as AUTH_TYPE;
+
+context.user;       // ✓ TypeScript knows it's a string
+context.onLogin({   // ✓ TS knows it needs email + password
+  email: "john@gmail.com",
+  password: "123456"
+});
+context.logOuts();  // ✗ ERROR! Typo - should be onLogout
+\end{lstlisting}
+
+\subsubsection*{Real Example from Zaika:}
+
+\begin{lstlisting}
+// DashboardLayout.tsx
+const context = useContext(AuthenticationContext) as AUTH_TYPE;
+
+// TypeScript autocomplete knows these exist:
+const { onLogout, user } = context;
+
+// Can use them with confidence:
+<p>{user}</p>                      // ✓ user is string
+<button onClick={onLogout}>Logout</button>  // ✓ Safe!
+
+// If you try:
+<button onClick={context.logOuts}>  // ✗ ERROR! Not defined
+\end{lstlisting}
+
+\subsubsection*{Benefits:}
+
+\begin{enumerate}
+    \item \textbf{Documentation:} Reading interface shows what context provides
+    \item \textbf{Autocomplete:} IDE suggests user, loading, onLogin, onLogout
+    \item \textbf{Error Prevention:} Typos caught immediately
+    \item \textbf{Refactoring:} If you change interface, all usages break (forces update)
+    \item \textbf{Team Coordination:} Everyone knows exact API of context
+\end{enumerate}
+
+---
+
+\subsection{Q18: What is a generic type and how is useState typed as \texttt{useState<\_STATE>}?}
+
+\subsubsection*{Simple Explanation:}
+
+\textbf{Generic Types} are like \textbf{templates} or \textbf{molds}. You define the shape once, use it many times.
+
+\textbf{Real-World Analogy:}
+
+Think of a cookie cutter (generic type). You can use it to make:
+\begin{itemize}
+    \item Star cookies
+    \item Heart cookies
+    \item Circle cookies
+\end{itemize}
+
+Same tool, different shapes. That's generics!
+
+\subsubsection*{useState Without Generics:}
+
+\begin{lstlisting}
+const [state, setState] = useState({ email: "", password: "" });
+
+// TypeScript guesses: state is { email: any, password: any }
+// No type safety!
+\end{lstlisting}
+
+\subsubsection*{useState With Generics:}
+
+\begin{lstlisting}
+type _STATE = {
+  email: string;
+  password: string;
+};
+
+const [state, setState] = useState<_STATE>({
+  email: "",
+  password: ""
+});
+
+// Now TypeScript KNOWS:
+// - state.email MUST be string
+// - state.password MUST be string
+// - No other properties allowed
+\end{lstlisting}
+
+\textbf{What <\_STATE> means:}
+\begin{lstlisting}
+useState<_STATE>
+        ^^^^^^^
+        |
+        "Template parameter"
+        "Use _STATE type for this useState"
+\end{lstlisting}
+
+\subsubsection*{More Generic Examples:}
+
+\textbf{Example 1: Different Types of Data}
+
+\begin{lstlisting}
+// State for recipes
+type RECIPE_STATE = {
+  title: string;
+  description: string;
+};
+const [recipe, setRecipe] = useState<RECIPE_STATE>({
+  title: "",
+  description: ""
+});
+
+// State for user
+type USER_STATE = {
+  name: string;
+  email: string;
+};
+const [user, setUser] = useState<USER_STATE>({
+  name: "",
+  email: ""
+});
+
+// Same useState hook, different types!
+\end{lstlisting}
+
+\textbf{Example 2: With useContext}
+
+\begin{lstlisting}
+// useContext is also generic
+const context = useContext<AUTH_TYPE>(AuthenticationContext);
+
+// Tells TypeScript: "The value of this context is AUTH_TYPE"
+\end{lstlisting}
+
+\subsubsection*{Why Generics Matter:}
+
+\begin{lstlisting}
+const [state, setState] = useState<_STATE>({...});
+
+// ✓ Correct:
+setState({ email: "john@gmail.com", password: "123" });
+
+// ✗ Wrong types:
+setState({ email: 123, password: true });  
+// ERROR! email should be string, password should be string
+
+// ✗ Missing property:
+setState({ email: "john@gmail.com" });
+// ERROR! password is required
+
+// ✗ Extra property:
+setState({ email: "john@gmail.com", password: "123", age: 25 });
+// ERROR! age is not in _STATE
+\end{lstlisting}
+
+\subsubsection*{Real Zaika Example:}
+
+\begin{lstlisting}
+// Define the shape
+type _STATE = {
+  email: string;
+  password: string;
+};
+
+// Use it as template
+const [state, setState] = useState<_STATE>({ 
+  email: "", 
+  password: "" 
+});
+
+// Now all setState calls are type-safe
+setState({ email: "john@gmail.com", password: "pass123" });  ✓
+setState({ email: 123 });                                     ✗ ERROR
+\end{lstlisting}
+
+---
+
+\subsection{Q19: Explain the difference between interface and type in TypeScript. Which is preferred in this project?}
+
+\subsubsection*{Comparison Table:}
+
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Feature} & \textbf{interface} & \textbf{type} \\
+\hline
+Creating objects & ✓ Yes & ✓ Yes \\
+Extending & ✓ Yes & ✓ Yes (with \&) \\
+Union types & ✗ No & ✓ Yes (\textbar{}) \\
+Primitives & ✗ No & ✓ Yes \\
+Merging & ✓ Yes & ✗ No \\
+Syntax & Declaration & Assignment \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsubsection*{interface Example:}
+
+\begin{lstlisting}
+// Define with keyword "interface"
+interface User {
+  email: string;
+  password: string;
+}
+
+interface Admin extends User {  // Can extend
+  isAdmin: boolean;
+}
+
+// Merging is allowed
+interface User {
+  age: number;  // Merged with previous User
+}
+// Now User has: email, password, age
+\end{lstlisting}
+
+\subsubsection*{type Example:}
+
+\begin{lstlisting}
+// Define with keyword "type"
+type User = {
+  email: string;
+  password: string;
+}
+
+type Admin = User & {  // Extend with &
+  isAdmin: boolean;
+}
+
+// Union types (interface can't do this)
+type Status = "pending" | "active" | "inactive";
+
+// Primitives (interface can't do this)
+type Email = string;
+\end{lstlisting}
+
+\subsubsection*{Zaika Uses BOTH:}
+
+\textbf{interfaces (for objects):}
+
+\begin{lstlisting}
+// @types/index.ts
+export interface IRECIPE {
+  title: string;
+  description: string;
+  ingredients: string;
+}
+
+export interface ILOGINRESPONSE {
+  email: string;
+  token: string;
+  id: string;
+}
+
+export interface AUTH_TYPE {
+  user: string;
+  loading: boolean;
+  onLogin: (payload: IPAYLOAD) => void;
+  onLogout: () => void;
+}
+\end{lstlisting}
+
+\textbf{types (for primitives \& unions):}
+
+\begin{lstlisting}
+// Landing/index.tsx
+type _STATE = {
+  email: string;
+  password: string;
+};
+
+// For unions:
+type RecipeStatus = "draft" | "published" | "deleted";
+\end{lstlisting}
+
+\subsubsection*{When to Use What:}
+
+\begin{itemize}
+    \item \textbf{interface:} For object shapes (User, Recipe, Response)
+    \item \textbf{type:} For primitives, unions, or complex types
+    \item \textbf{Rule of Thumb:} Start with interface, use type if needed
+\end{itemize}
+
+\subsubsection*{Zaika Preference:}
+
+Zaika uses \textbf{interface} for public API types and \textbf{type} for local component state. This is a good pattern!
+
+---
+
+\subsection{Q20: How would you handle API responses that might have optional properties using TypeScript?}
+
+\subsubsection*{Simple Explanation:}
+
+Some API responses might have \textbf{optional} data. For example, a recipe might or might not have a "note" field.
+
+\subsubsection*{Method 1: Optional Property Marker (?)}
+
+\begin{lstlisting}
+// Some recipes have notes, some don't
+interface IRECIPE {
+  title: string;          // Required
+  description: string;    // Required
+  note?: string;          // Optional (? means maybe)
+  ingredients: string;    // Required
+}
+
+// Valid responses:
+const recipe1: IRECIPE = {
+  title: "Biryani",
+  description: "Rice dish",
+  ingredients: "Rice, meat"
+  // note is missing - OKAY! (optional)
+};
+
+const recipe2: IRECIPE = {
+  title: "Biryani",
+  description: "Rice dish",
+  note: "Serve hot",  // Added - also OKAY!
+  ingredients: "Rice, meat"
+};
+
+// Invalid:
+const recipe3: IRECIPE = {
+  title: "Biryani",
+  // description missing - ERROR! Required
+  note: "Serve hot",
+  ingredients: "Rice, meat"
+};
+\end{lstlisting}
+
+\subsubsection*{Method 2: Using Union Types (value | null)}
+
+\begin{lstlisting}
+interface IIMAGE {
+  url: string;
+  id: string;
+}
+
+interface IRECIPE {
+  title: string;
+  description: string;
+  image: IIMAGE | null;  // Either IIMAGE or null
+}
+
+// Valid:
+const recipe1 = {
+  title: "Biryani",
+  description: "...",
+  image: { url: "...", id: "..." }  // ✓ Has image
+};
+
+const recipe2 = {
+  title: "Biryani",
+  description: "...",
+  image: null  // ✓ No image
+};
+
+// Invalid:
+const recipe3 = {
+  title: "Biryani",
+  description: "...",
+  image: { url: "..." }  // ✗ Missing id
+};
+\end{lstlisting}
+
+\subsubsection*{Method 3: Using Omit Utility Type}
+
+\begin{lstlisting}
+// Full user object
+interface User {
+  id: string;
+  email: string;
+  password: string;
+}
+
+// User for API response (exclude password)
+type UserResponse = Omit<User, "password">;
+// Result: { id, email }
+
+// Now when API responds:
+const user: UserResponse = {
+  id: "123",
+  email: "john@gmail.com"
+  // password not included - not allowed anyway!
+};
+\end{lstlisting}
+
+\textbf{Real Zaika Example:}
+
+\begin{lstlisting}
+export interface IRECIPE {
+  title: string;
+  description: string;
+  note?: string;  // Optional
+  ingredients: string;
+}
+
+export interface IRECIPERESPONSE extends IRECIPE {
+  _id: string;
+  image: IIMAGE;
+  user: {
+    email: string;
+  };
+}
+
+// Using it:
+const handleRecipe = (recipe: IRECIPERESPONSE) => {
+  console.log(recipe.title);      // ✓ Always has title
+  console.log(recipe.note);       // ✓ Might be undefined
+  console.log(recipe._id);        // ✓ API always adds _id
+  console.log(recipe.user.email); // ✓ User always exists
+};
+\end{lstlisting}
+
+\subsubsection*{Method 4: Handling Undefined}
+
+\begin{lstlisting}
+// When property is optional, it might be undefined
+const recipe: IRECIPE = { title: "...", ... };
+
+// ✗ Dangerous - note might be undefined
+const length = recipe.note.length;  // ERROR in runtime!
+
+// ✓ Safe - check first
+if (recipe.note) {
+  const length = recipe.note.length;  // Now safe
+}
+
+// ✓ Or use optional chaining
+const length = recipe.note?.length;  // undefined if no note
+\end{lstlisting}
+
+\subsubsection*{Best Practices:}
+
+\begin{enumerate}
+    \item Use \texttt{?} for optional properties
+    \item Use \texttt{| null} for explicitly nullable values
+    \item Use \texttt{Omit<T>} to exclude properties
+    \item Check before accessing optional properties
+    \item Use optional chaining: \texttt{obj?.property?.nested}
+\end{enumerate}
+
+%========================= STYLING SECTION =========================
+\section{Styling and UI Components}
+
+\subsection{Q21: Explain Tailwind CSS and why it's used instead of traditional CSS. Give examples from the Landing page.}
+
+\subsubsection*{Traditional CSS vs Tailwind:}
+
+\textbf{Traditional CSS Approach:}
+
+\begin{lstlisting}
+// styles.css
+.login-button {
+  background-color: #ff8c00;
+  color: white;
+  padding: 8px 24px;
+  border-radius: 4px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.login-button:hover {
+  background-color: #e07b00;
+}
+
+// index.tsx
+<button className="login-button">Login</button>
+\end{lstlisting}
+
+\textbf{Tailwind CSS Approach:}
+
+\begin{lstlisting}
+// index.tsx (all styling inline!)
+<button className="bg-orange-500 text-white py-2 px-6 
+                   font-bold rounded hover:bg-orange-600">
+  Login
+</button>
+\end{lstlisting}
+
+\subsubsection*{Why Tailwind?}
+
+\begin{enumerate}
+    \item \textbf{Faster Development:} Write styles while writing HTML (no context switch)
+    \item \textbf{Smaller CSS:} Only includes used classes (purging)
+    \item \textbf{Consistent Design:} Predefined colors, spacing, typography
+    \item \textbf{No Naming:} Don't struggle naming CSS classes
+    \item \textbf{Mobile First:} Built-in responsive design with prefixes
+    \item \textbf{Dark Mode:} Automatic dark mode support
+\end{enumerate}
+
+\subsubsection*{Zaika Landing Page Examples:}
+
+\textbf{Layout}
+
+\begin{lstlisting}
+// Full screen with flex layout
+<div className="w-full h-screen flex overflow-hidden">
+  {/* w-full = 100% width
+      h-screen = 100% viewport height
+      flex = flexbox layout
+      overflow-hidden = hide scrollbars */}
+</div>
+\end{lstlisting}
+
+\textbf{Form Container - Left Side}
+
+\begin{lstlisting}
+<Form className="flex items-center justify-center 
+                 w-full md:w-1/2 h-full p-10 
+                 bg-black text-white">
+  {/* flex = flexbox container
+      items-center = vertically center
+      justify-center = horizontally center
+      w-full = 100% width (mobile)
+      md:w-1/2 = 50% width on medium+ screens
+      h-full = 100% height
+      p-10 = padding 40px
+      bg-black = background black
+      text-white = text color white */}
+</Form>
+\end{lstlisting}
+
+\textbf{Logo}
+
+\begin{lstlisting}
+<h2 className="text-orange-500 font-extrabold text-3xl 
+               md:text-4xl underline underline-offset-8 mb-4">
+  Zaika
+</h2>
+{/* text-orange-500 = orange color
+    font-extrabold = extra bold
+    text-3xl = large size (mobile)
+    md:text-4xl = larger on desktop
+    underline = add underline
+    underline-offset-8 = space under text
+    mb-4 = margin bottom */}
+\end{lstlisting}
+
+\textbf{Input Fields}
+
+\begin{lstlisting}
+<Input
+  className="bg-zinc-900 py-1 px-4 w-full md:w-[80%] 
+             shadow-xl placeholder:text-sm 
+             hover:bg-zinc-800 cursor-pointer 
+             focus:outline-none"
+/>
+{/* bg-zinc-900 = dark gray background
+    py-1 = padding top/bottom
+    px-4 = padding left/right
+    w-full = 100% width (mobile)
+    md:w-[80%] = 80% width on desktop
+    shadow-xl = strong shadow
+    placeholder:text-sm = placeholder text small
+    hover:bg-zinc-800 = lighter on hover
+    cursor-pointer = pointer cursor
+    focus:outline-none = no outline when focused */}
+\end{lstlisting}
+
+\textbf{Button}
+
+\begin{lstlisting}
+<Button
+  className="bg-orange-500 text-white hover:bg-orange-600 
+             py-1 px-6 w-full"
+/>
+{/* bg-orange-500 = orange background
+    text-white = white text
+    hover:bg-orange-600 = darker orange on hover
+    py-1 = vertical padding
+    px-6 = horizontal padding
+    w-full = 100% width */}
+\end{lstlisting}
+
+\textbf{Image - Right Side (Hidden on Mobile)}
+
+\begin{lstlisting}
+<div className="w-1/2 h-full">
+  <img className="w-full h-full object-cover" 
+       src={recipeOne} />
+</div>
+{/* w-1/2 = 50% width (hidden on mobile by parent)
+    h-full = 100% height
+    object-cover = crop to fit without distortion */}
+\end{lstlisting}
+
+\subsubsection*{Responsive Design Example:}
+
+\begin{lstlisting}
+className="w-full md:w-1/2 lg:w-1/3 xl:w-1/4"
+
+// Mobile (small screen): 100% width
+// Tablet (md = 768px+): 50% width
+// Desktop (lg = 1024px+): 33% width
+// Large (xl = 1280px+): 25% width
+
+// This is responsive design in one line!
+\end{lstlisting}
+
+\subsubsection*{Tailwind Color System:}
+
+\begin{lstlisting}
+// Orange (used for branding)
+bg-orange-400  // lighter
+bg-orange-500  // default
+bg-orange-600  // darker (hover state)
+
+// Neutrals (used for dark theme)
+bg-black       // pure black
+bg-zinc-900    // almost black
+bg-zinc-800    // dark gray
+bg-white       // pure white
+\end{lstlisting}
+
+\subsubsection*{Benefits Summary:}
+
+\begin{enumerate}
+    \item \textbf{No CSS Files:} All styling in HTML class names
+    \item \textbf{Consistency:} Predefined color palette (\texttt{orange-500}, \texttt{zinc-900})
+    \item \textbf{Responsive:} \texttt{md:}, \texttt{lg:}, \texttt{xl:} prefixes for breakpoints
+    \item \textbf{Hover/Focus:} \texttt{hover:}, \texttt{focus:}, \texttt{active:} prefixes
+    \item \textbf{Dark Mode:} \texttt{dark:} prefix for dark mode styles
+\end{enumerate}
+
+%========================= CONCLUSION =========================
+
+\section*{Summary}
+
+This comprehensive guide covers:
+
+\begin{itemize}
+    \item \textbf{React Fundamentals:} Components, hooks (useState, useContext, useLayoutEffect)
+    \item \textbf{Routing:} React Router v6, nested routes, dynamic routes, protected routes
+    \item \textbf{State Management:} Context API, avoiding prop drilling
+    \item \textbf{Authentication:} Complete login flow, session management, axios interceptors
+    \item \textbf{TypeScript:} Type safety, interfaces, generics, handling optional data
+    \item \textbf{Styling:} Tailwind CSS utility-first approach
+    \item \textbf{Project Structure:} Folder organization and best practices
+\end{itemize}
+
+\section*{Key Takeaways for Interviewers}
+
+Candidates should demonstrate:
+
+\begin{enumerate}
+    \item Understanding of React component lifecycle and hooks
+    \item Knowledge of routing and navigation patterns
+    \item Ability to implement authentication and state management
+    \item TypeScript proficiency for type safety
+    \item Familiarity with modern tools (Vite, Tailwind, axios)
+    \item Best practices in folder structure and code organization
+    \item Understanding of API integration and error handling
+\end{enumerate}
+
+\end{document}

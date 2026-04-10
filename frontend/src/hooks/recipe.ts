@@ -11,7 +11,7 @@ export const useRecipe = () => {
   ): Promise<AxiosResponse<IRECIPERESPONSE[] | []> | any> => {
     try {
       setLoading(true);
-      const response = await instance.get(`http://localhost:4000/recipe/find?q=${q}`);
+      const response = await instance.get(`/recipe/find?q=${q}`);
       if (response) {
         return response?.data;
       }
@@ -37,7 +37,7 @@ export const useRecipe = () => {
 
     try {
       setLoading(true);
-      await instance.post("http://localhost:4000/recipe/create", formData);
+      await instance.post("/recipe/create", formData);
     } catch (error) {
       console.log(error);
     } finally {

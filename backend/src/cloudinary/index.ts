@@ -22,12 +22,12 @@ export const upload= async(file: Buffer, folder: string): Promise<UploadApiRespo
 
     return new Promise((resolve, reject) => {
         const upload = cloudinary.uploader.upload_stream(
-            (error: UploadApiErrorResponse, result: UploadApiResponse) => {
-            if (error) return reject(error);
-            resolve(result);
-        }        
-    );
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    toStream(bufferOfFile).pipe(upload), { resource_type: "auto", folder};  
-  });
+            { resource_type: "auto", folder },
+            (error, result) => {
+                if (error || !result) return reject(error);
+                resolve(result);
+            }
+        );
+        toStream(bufferOfFile).pipe(upload);
+    });
 } 

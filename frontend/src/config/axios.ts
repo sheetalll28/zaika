@@ -3,9 +3,6 @@ import cogoToast from "cogo-toast";
 
 export const instance = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL_DEV,
-  headers: {
-    "Access-Control-Allow-Origin": "*",
-  },
 });
 
 instance.interceptors.request.use(

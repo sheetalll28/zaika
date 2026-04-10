@@ -1,0 +1,187 @@
+\documentclass[12pt]{article}
+\usepackage[utf-8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+% Header and Footer
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\textcolor{orange}{Zaika Frontend}}
+\lhead{Interview Questions}
+\cfoot{\thepage}
+
+% Title Styling
+\titleformat{\section}
+{\normalfont\Large\bfseries\color{orange}}
+{\thesection}{1em}{}
+
+% Color definitions
+\definecolor{darkblue}{RGB}{0, 51, 102}
+\definecolor{orange}{RGB}{255, 140, 0}
+
+\title{\textcolor{orange}{\textbf{Frontend Development Interview Questions}}}
+\author{\textcolor{darkblue}{Zaika - Recipe Sharing Application}}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{center}
+\textcolor{darkblue}{\textit{A comprehensive set of questions about React, TypeScript, and Frontend Architecture}}
+\end{center}
+
+\vspace{1cm}
+
+\section*{Core React Concepts}
+
+\begin{enumerate}[label=\textbf{\arabic*.}, itemsep=0.5cm]
+
+\item \textbf{What is React and why would you use it for building the Zaika application?}
+\newline
+\textcolor{gray}{\textit{Expected: Discuss component-based architecture, virtual DOM, reusability, and unidirectional data flow.}}
+
+\item \textbf{Explain the difference between functional components and class components. Which one is used in Zaika?}
+\newline
+\textcolor{gray}{\textit{Expected: Functional components with hooks are used throughout Zaika. Explain why they're preferred.}}
+
+\item \textbf{What is the useState hook and how is it used in the Landing page to manage form state?}
+\newline
+\textcolor{gray}{\textit{Expected: Discuss state initialization, setter function, and the [state, setState] pattern.}}
+
+\item \textbf{Explain what the useContext hook does and how authentication context is implemented in Zaika.}
+\newline
+\textcolor{gray}{\textit{Expected: Context API for global state, avoiding prop drilling, AuthenticationContext implementation.}}
+
+\item \textbf{What is the useLayoutEffect hook and why is it used to protect the Landing page route?}
+\newline
+\textcolor{gray}{\textit{Expected: Runs before rendering, synchronous, used for redirect logic, differs from useEffect.}}
+
+\end{enumerate}
+
+\section*{React Router and Navigation}
+
+\begin{enumerate}[label=\textbf{\arabic*.}, itemsep=0.5cm, start=6]
+
+\item \textbf{Explain React Router DOM v6 and how routing is configured in the App.tsx file.}
+\newline
+\textcolor{gray}{\textit{Expected: createBrowserRouter, RouterProvider, nested routes, path patterns like /dashboard/recipe/:id}}
+
+\item \textbf{What are NavLink and useNavigate hooks? How are they used in the DashboardLayout?}
+\newline
+\textcolor{gray}{\textit{Expected: NavLink for navigation links with active styling, useNavigate for programmatic navigation.}}
+
+\item \textbf{What is the Outlet component and what role does it play in the DashboardLayout?}
+\newline
+\textcolor{gray}{\textit{Expected: Placeholder for child routes, allows nested routing, renders child page content.}}
+
+\item \textbf{How does the dynamic route parameter \texttt{:id} work in the recipe details page? Give an example.}
+\newline
+\textcolor{gray}{\textit{Expected: \texttt{/dashboard/recipe/:id} captures ID, useParams hook extracts it, used to fetch specific recipe.}}
+
+\item \textbf{How would you implement route protection to ensure only authenticated users can access the dashboard?}
+\newline
+\textcolor{gray}{\textit{Expected: useLayoutEffect with token check, redirect to /, higher-order components, or route guards.}}
+
+\end{enumerate}
+
+\section*{State Management and Authentication}
+
+\begin{enumerate}[label=\textbf{\arabic*.}, itemsep=0.5cm, start=11]
+
+\item \textbf{Describe the complete authentication flow in Zaika from login to accessing the dashboard.}
+\newline
+\textcolor{gray}{\textit{Expected: User inputs → validation → API call → save token → context update → redirect.}}
+
+\item \textbf{What is sessionStorage and how is it used to persist authentication tokens in Zaika?}
+\newline
+\textcolor{gray}{\textit{Expected: Browser API, temporary storage, cleared on tab close, used for JWT tokens.}}
+
+\item \textbf{Explain what the AuthenticationContext provides and how it avoids prop drilling.}
+\newline
+\textcolor{gray}{\textit{Expected: Provides user, loading, onLogin, onLogout globally without passing through all components.}}
+
+\item \textbf{How are axios interceptors configured and what do they do in the config/axios.ts file?}
+\newline
+\textcolor{gray}{\textit{Expected: Request interceptor adds token, response interceptor handles 401 errors and shows toasts.}}
+
+\item \textbf{What happens when a user's session expires (401 error)? How is this handled?}
+\newline
+\textcolor{gray}{\textit{Expected: Interceptor catches 401, clears sessionStorage, shows warning toast, redirects to login.}}
+
+\end{enumerate}
+
+\section*{TypeScript and Type Safety}
+
+\begin{enumerate}[label=\textbf{\arabic*.}, itemsep=0.5cm, start=16]
+
+\item \textbf{What is TypeScript and why is it beneficial for the Zaika project?}
+\newline
+\textcolor{gray}{\textit{Expected: Type safety, catching errors at compile time, improved IDE support, better documentation.}}
+
+\item \textbf{Examine the AUTH\_TYPE interface. Why is it important to define types for context values?}
+\newline
+\textcolor{gray}{\textit{Expected: Ensures components using context know what properties are available, prevents bugs.}}
+
+\item \textbf{What is a generic type and how is useState typed as \texttt{useState<\_STATE>}?}
+\newline
+\textcolor{gray}{\textit{Expected: Generics add type parameter, useState<_STATE> tells TypeScript what shape state will have.}}
+
+\item \textbf{Explain the difference between interface and type in TypeScript. Which is preferred in this project?}
+\newline
+\textcolor{gray}{\textit{Expected: Similar purposes, interfaces more extensible, types more flexible, both used in Zaika.}}
+
+\item \textbf{How would you handle API responses that might have optional properties using TypeScript?}
+\newline
+\textcolor{gray}{\textit{Expected: Use optional properties with ?, Omit utility type, Partial<T>, discriminated unions.}}
+
+\end{enumerate}
+
+\section*{Styling and UI Components}
+
+\begin{enumerate}[label=\textbf{\arabic*.}, itemsep=0.5cm, start=21]
+
+\item \textbf{Explain Tailwind CSS and why it's used instead of traditional CSS. Give examples from the Landing page.}
+\newline
+\textcolor{gray}{\textit{Expected: Utility-first approach, \texttt{bg-black}, \texttt{text-white}, \texttt{md:w-1/2}, responsive design classes.}}
+
+\end{enumerate}
+
+\vspace{2cm}
+
+\section*{Instructions for Candidates}
+
+\begin{itemize}
+    \item Each question tests different aspects of frontend development
+    \item Some questions require code examples from the Zaika project
+    \item Be prepared to discuss trade-offs and alternatives
+    \item Show your understanding of React patterns, routing, and state management
+    \item Demonstrate knowledge of TypeScript type system
+    \item Explain how authentication and API integration works in real applications
+\end{itemize}
+
+\vspace{1cm}
+
+\section*{Project Stack Summary}
+
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Technology} & \textbf{Purpose} \\
+\hline
+React 18 & UI Library \\
+TypeScript & Type Safety \\
+React Router DOM v6 & Client-side Routing \\
+Tailwind CSS & Styling \\
+Axios & HTTP Requests \\
+SWR & Data Fetching \& Caching \\
+Vite & Build Tool \\
+React Context API & Global State Management \\
+\hline
+\end{tabular}
+\end{center}
+
+\end{document}

@@ -89,7 +89,7 @@ export const Home = () => {
   const { loading, searchRecipe } = useRecipe();
   // useSWR fetcher
   const fetcher = (url: string) => instance.get(url).then((res) => res.data);
-  const { data, error } = useSWR("http://localhost:4000/recipe", fetcher, { suspense: true });
+  const { data, error } = useSWR("/recipe", fetcher, { suspense: true });
 
   if (error) {
     console.log(error);

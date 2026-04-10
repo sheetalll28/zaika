@@ -43,7 +43,10 @@ app.all('*', (req: Request, res: Response) => {
 const runDB = async () =>{
   connect(process.env.MONGODB_URI as string)
     .then(() => console.log("DB connected successfully "))
-    .catch(() => console.log("DB not connected"))
+    .catch((err) => {
+      console.log("DB not connected");
+      console.log("Error:", err.message);
+    })
 };
 
 runDB();

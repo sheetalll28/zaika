@@ -8,7 +8,7 @@ import useSWR from "swr";
 export const More = () => {
   const params = useParams().id;
   const fetcher = (url: string) => instance.get(url).then((res) => res.data);
-  const { data, error } = useSWR("http://localhost:4000/recipe/" + params, fetcher, {
+  const { data, error } = useSWR("/recipe/" + params, fetcher, {
     suspense: true,
   });
 
