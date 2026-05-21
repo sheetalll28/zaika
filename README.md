@@ -51,7 +51,7 @@ Role: Backend Developer
 - Implemented user authentication with JWT
 - Developed the server-side logic for recipes and user interactions
 
-### 👨‍💻 Arush Vij
+### 👨‍💻 Shweta Ahirwar
 Role: Frontend Developer
 
 - Designed the UI using React.js and Tailwind CSS
