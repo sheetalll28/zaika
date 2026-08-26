@@ -25,7 +25,7 @@ export const Landing = () => {
   const [latestRecipe, setLatestRecipe] = useState<LatestRecipe>(null);
 
   useEffect(() => {
-    fetch("http://localhost:5000/recipe/recent")
+    fetch(`${import.meta.env.VITE_BASE_URL_DEV}/recipe/recent`)
       .then((response) => response.ok ? response.json() : null)
       .then((recipe: LatestRecipe) => setLatestRecipe(recipe))
       .catch(() => setLatestRecipe(null));
