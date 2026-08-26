@@ -1,5 +1,5 @@
 import { useState, createContext, useEffect, ReactNode } from "react";
-import { AUTH_TYPE, ILOGINRESPONSE } from "../@types";
+import { AUTH_TYPE, ILOGINRESPONSE, IPAYLOAD } from "../@types";
 import { useAuth } from "../hooks";
 
 export const AuthenticationContext = createContext<AUTH_TYPE | null>(null);
@@ -9,7 +9,7 @@ export const AuthenticationContextProvider = ({
 }: {
   children: ReactNode;
 }) => {
-  const { loading, login } = useAuth();
+  const { loading, signup, login } = useAuth();
   const [user, setUser] = useState<string>("");
 
   useEffect(() => {
@@ -21,14 +21,12 @@ export const AuthenticationContextProvider = ({
     }
   }, []);
 
-  const onLogin = async (payload: {
-    email: string;
-    password: string;
-  }): Promise<unknown> => {
+  const onLogin = async (payload: IPAYLOAD): Promise<unknown> => {
     const response: ILOGINRESPONSE = await login(payload);
     if (response) {
       sessionStorage.setItem("token", response?.token);
       sessionStorage.setItem("email", response?.email);
+      sessionStorage.setItem("username", response?.username);
       sessionStorage.setItem("id", response?.id);
 
       setUser(response?.email);
@@ -36,9 +34,12 @@ export const AuthenticationContextProvider = ({
     }
   };
 
+  const onSignup = async (payload: IPAYLOAD): Promise<unknown> => signup(payload);
+
   const onLogout = (): any => {
     sessionStorage.removeItem("token");
     sessionStorage.removeItem("email");
+    sessionStorage.removeItem("username");
     sessionStorage.removeItem("id");
     return (window.location.href = "/");
   };
@@ -48,6 +49,7 @@ export const AuthenticationContextProvider = ({
       value={{
         user,
         loading,
+        onSignup,
         onLogin,
         onLogout,
       }}

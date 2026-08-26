@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <rect width="400" height="400" rx="48" fill="#241417"/>
+  <circle cx="200" cy="200" r="150" fill="none" stroke="#7FA08E" stroke-width="3" opacity="0.35"/>
+
+  <!-- leaf -->
+  <path d="M190,120 C266,132 280,210 190,286 C100,210 114,132 190,120 Z" fill="none" stroke="#7FA08E" stroke-width="9" stroke-linejoin="round"/>
+  <path d="M190,134 C190,180 190,240 190,272" fill="none" stroke="#7FA08E" stroke-width="6" stroke-linecap="round" opacity="0.8"/>
+  <path d="M190,170 Q216,178 226,196" fill="none" stroke="#7FA08E" stroke-width="5" stroke-linecap="round" opacity="0.7"/>
+  <path d="M190,210 Q164,218 154,236" fill="none" stroke="#7FA08E" stroke-width="5" stroke-linecap="round" opacity="0.7"/>
+
+  <!-- prohibited oil drop badge -->
+  <circle cx="292" cy="278" r="40" fill="#241417" stroke="#7FA08E" stroke-width="8"/>
+  <path d="M292,258 C304,272 308,282 300,292 C295,299 289,299 284,292 C276,282 280,272 292,258 Z" fill="none" stroke="#7FA08E" stroke-width="6"/>
+  <line x1="266" y1="304" x2="318" y2="252" stroke="#7FA08E" stroke-width="8" stroke-linecap="round"/>
+</svg>

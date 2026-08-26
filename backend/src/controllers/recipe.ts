@@ -40,6 +40,7 @@ export const searchRecipe = async (req: Request, res: Response) => {
           description: 1,
           title: 1,
           ingredients: 1,  // Make sure to include ingredients in the projection
+          category: 1,
           image: 1,
         },
       },
@@ -90,6 +91,29 @@ export const getAllRecipes = async (req: Request, res: Response) => {
     res
       .status(500)
       .json({ error: "An error occurred while processing your request" });
+  }
+};
+
+export const getLatestRecipe = async (req: Request, res: Response) => {
+  try {
+    const recipe = await Recipe.findOne({})
+      .populate("user", "username email")
+      .sort({ createdAt: -1 })
+      .exec();
+
+    if (!recipe) {
+      res.status(200).json(null);
+      return;
+    }
+
+    const author = recipe.user as unknown as { username?: string; email: string };
+    res.status(200).json({
+      title: recipe.title,
+      username: author.username || author.email,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Unable to load the latest recipe" });
   }
 };
 
@@ -162,12 +186,13 @@ export const createRecipe = async (req: Request, res: Response): Promise<void> =
     return;
   }
 
-  const { title, note, description, ingredients }: { title: string; note: string; description: string; ingredients: string } = req.body;
+  const { title, note, description, ingredients, category }: { title: string; note: string; description: string; ingredients: string; category: string } = req.body;
 
   try {
     // Create the new recipe in the database
     const recipe = await Recipe.create({
       user: req.user,
+      category,
       title,
       note,
       description,

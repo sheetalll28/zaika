@@ -50,13 +50,22 @@ dotenv.config();
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const helmet_1 = __importDefault(require("helmet"));
+const passport_1 = __importDefault(require("passport"));
 const mongoose_1 = require("mongoose");
+const express_fileupload_1 = __importDefault(require("express-fileupload"));
+const config_1 = __importDefault(require("./config"));
 const routes_1 = require("./routes");
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use((0, cors_1.default)());
 app.use((0, helmet_1.default)());
+app.use((0, express_fileupload_1.default)({
+    limits: { fileSize: 50 * 1024 * 1024 },
+    abortOnLimit: true,
+}));
+app.use(passport_1.default.initialize());
+(0, config_1.default)(passport_1.default);
 app.use('/auth', routes_1.authRouter);
 app.use('/recipe', routes_1.recipeRouter);
 app.get("/ping", (req, res) => {
@@ -68,7 +77,10 @@ app.all('*', (req, res) => {
 const runDB = () => __awaiter(void 0, void 0, void 0, function* () {
     (0, mongoose_1.connect)(process.env.MONGODB_URI)
         .then(() => console.log("DB connected successfully "))
-        .catch(() => console.log("DB not connected"));
+        .catch((err) => {
+        console.log("DB not connected");
+        console.log("Error:", err.message);
+    });
 });
 runDB();
 const PORT = process.env.PORT || 5000;

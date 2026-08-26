@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <rect width="400" height="400" rx="48" fill="#241417"/>
+  <circle cx="200" cy="200" r="150" fill="none" stroke="#C9BBA5" stroke-width="3" opacity="0.35"/>
+
+  <!-- clock face -->
+  <circle cx="192" cy="208" r="92" fill="none" stroke="#C9BBA5" stroke-width="9"/>
+
+  <!-- ticks -->
+  <line x1="192" y1="126" x2="192" y2="140" stroke="#C9BBA5" stroke-width="6" stroke-linecap="round"/>
+  <line x1="192" y1="276" x2="192" y2="290" stroke="#C9BBA5" stroke-width="6" stroke-linecap="round"/>
+  <line x1="274" y1="208" x2="260" y2="208" stroke="#C9BBA5" stroke-width="6" stroke-linecap="round"/>
+  <line x1="110" y1="208" x2="124" y2="208" stroke="#C9BBA5" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- hands: short 10-minute sweep -->
+  <line x1="192" y1="208" x2="192" y2="158" stroke="#C9BBA5" stroke-width="8" stroke-linecap="round"/>
+  <line x1="192" y1="208" x2="228" y2="184" stroke="#C9BBA5" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="192" cy="208" r="7" fill="#C9BBA5"/>
+
+  <!-- speed bolt -->
+  <path d="M296,264 L276,296 L292,296 L272,332 L306,290 L288,290 Z" fill="#C9BBA5"/>
+</svg>

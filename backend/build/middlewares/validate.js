@@ -11,22 +11,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validate = void 0;
 const yup_1 = require("yup");
-const validate = (schema) => (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        yield schema.validate({
-            body: req.body,
-            query: req.query,
-            params: req.params,
-        });
-        next(); // Call next() to proceed to the next middleware/handler
-    }
-    catch (err) {
-        if (err instanceof yup_1.ValidationError) {
-            res.status(400).json({ error: err.message });
+const validate = (schema) => {
+    return (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            yield schema.validate({
+                body: req.body,
+                query: req.query,
+                params: req.params,
+            });
+            next(); // Call next() to proceed to the next middleware/handler
         }
-        else {
-            res.status(500).json({ error: "Internal Server Error" });
+        catch (err) {
+            if (err instanceof yup_1.ValidationError) {
+                res.status(400).json({ error: err.message });
+            }
+            else {
+                res.status(500).json({ error: "Internal Server Error" });
+            }
         }
-    }
-});
+    });
+};
 exports.validate = validate;

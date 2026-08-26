@@ -1,4 +1,4 @@
-import React, { DragEvent, FormEvent } from "react";
+import { DragEvent, FormEvent } from "react";
 import { Input } from "../../../components";
 
 export const ImageUploader = ({

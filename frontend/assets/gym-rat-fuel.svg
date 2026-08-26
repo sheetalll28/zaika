@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <rect width="400" height="400" rx="48" fill="#241417"/>
+  <circle cx="200" cy="200" r="150" fill="none" stroke="#4B5D3F" stroke-width="3" opacity="0.35"/>
+
+  <!-- bar -->
+  <line x1="140" y1="212" x2="260" y2="212" stroke="#4B5D3F" stroke-width="11" stroke-linecap="round"/>
+
+  <!-- left plates -->
+  <rect x="88" y="176" width="26" height="72" rx="8" fill="none" stroke="#4B5D3F" stroke-width="9"/>
+  <rect x="118" y="186" width="20" height="52" rx="7" fill="none" stroke="#4B5D3F" stroke-width="9"/>
+
+  <!-- right plates -->
+  <rect x="286" y="176" width="26" height="72" rx="8" fill="none" stroke="#4B5D3F" stroke-width="9"/>
+  <rect x="262" y="186" width="20" height="52" rx="7" fill="none" stroke="#4B5D3F" stroke-width="9"/>
+
+  <!-- protein leaf accent above bar -->
+  <path d="M200,140 C224,146 230,170 200,188 C170,170 176,146 200,140 Z" fill="none" stroke="#4B5D3F" stroke-width="7"/>
+  <line x1="200" y1="146" x2="200" y2="182" stroke="#4B5D3F" stroke-width="5" stroke-linecap="round"/>
+</svg>

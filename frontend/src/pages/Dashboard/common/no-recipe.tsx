@@ -5,7 +5,7 @@ export const NoRecipe = () => {
     const navigate = useNavigate();
 
     const handleNavigate = () => {
-        navigate("/dashboard/add-recipe" , { replace: true});
+        navigate("/dashboard/addrecipe" , { replace: true});
     };
     return (
         <div className="flex items-center justify-center flex-col md:w-[50%] m-auto">

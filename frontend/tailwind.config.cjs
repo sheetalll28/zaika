@@ -12,7 +12,16 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ["Fraunces", "serif"],
+        sans: ["Work Sans", "sans-serif"],
+        display: ["Fraunces", "Georgia", "serif"],
+      },
+      colors: {
+        ink: "var(--ink)",
+        saffron: "var(--saffron)",
+        chili: "var(--chili)",
+        "curry-leaf": "var(--curry-leaf)",
+        cream: "var(--cream)",
+        "cream-dim": "var(--cream-dim)",
       },
     },
     plugins: [],

@@ -1,4 +1,4 @@
-import React, { FormEvent } from "react";
+import { FormEvent, SetStateAction } from "react";
 import { Form } from "./form";
 import { Input } from "./input";
 
@@ -11,7 +11,7 @@ export const SearchBox = ({
 }: {
   title: string;
   onSearch: (e: FormEvent<HTMLFormElement>) => void;
-  setQuery: (e: React.SetStateAction<string>) => void;
+  setQuery: (e: SetStateAction<string>) => void;
   query: string;
   disabled?: boolean;
 }) => {

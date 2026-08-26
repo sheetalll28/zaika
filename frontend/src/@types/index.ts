@@ -1,4 +1,5 @@
 export interface IRECIPE {
+    category?: string;
     title: string;
     description: string;
     note?: string;
@@ -26,18 +27,22 @@ export interface IRECIPE {
   }
   
   export interface ILOGINRESPONSE {
+    username: string;
     email: string;
     token: string;
     id: string;
   }
   
   export interface IPAYLOAD {
-    email: string;
+    username?: string;
+    identifier?: string;
+    email?: string;
     password: string;
   }
   export interface AUTH_TYPE {
     user: string;
     loading: boolean;
+    onSignup: (payload: IPAYLOAD) => Promise<unknown>;
     onLogin: (payload: IPAYLOAD) => void;
     onLogout: () => void;
   }

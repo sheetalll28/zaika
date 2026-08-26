@@ -147,7 +147,7 @@ export const MyRecipes = () => {
         ) : (
           <>
             {(state && state.length > 0) ? (
-              <div className="flex flex-wrap gap-3 flex-col md:flex-row w-full">
+              <div className="grid w-full min-w-0 grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
                 {state.map((recipe: IRECIPERESPONSE, index: number) => (
                   <RecipeCard
                     key={index + recipe._id}

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <rect width="400" height="400" rx="48" fill="#241417"/>
+  <circle cx="200" cy="200" r="150" fill="none" stroke="#B5432D" stroke-width="3" opacity="0.35"/>
+
+  <!-- steam -->
+  <path d="M172,168 Q164,150 174,138 Q184,126 176,110" fill="none" stroke="#B5432D" stroke-width="6" stroke-linecap="round" opacity="0.75"/>
+  <path d="M200,168 Q192,150 202,138 Q212,126 204,110" fill="none" stroke="#B5432D" stroke-width="6" stroke-linecap="round" opacity="0.75"/>
+  <path d="M228,168 Q220,150 230,138 Q240,126 232,110" fill="none" stroke="#B5432D" stroke-width="6" stroke-linecap="round" opacity="0.75"/>
+
+  <!-- bowl -->
+  <ellipse cx="200" cy="222" rx="88" ry="20" fill="none" stroke="#B5432D" stroke-width="9"/>
+  <path d="M112,222 Q112,282 200,282 Q288,282 288,222" fill="none" stroke="#B5432D" stroke-width="9" stroke-linecap="round"/>
+
+  <!-- rice mound -->
+  <path d="M158,216 Q200,190 242,216" fill="none" stroke="#B5432D" stroke-width="7" stroke-linecap="round" opacity="0.6"/>
+
+  <!-- spoon leaning -->
+  <path d="M296,196 L268,258" fill="none" stroke="#B5432D" stroke-width="7" stroke-linecap="round"/>
+  <ellipse cx="300" cy="184" rx="12" ry="16" fill="none" stroke="#B5432D" stroke-width="7" transform="rotate(24 300 184)"/>
+</svg>

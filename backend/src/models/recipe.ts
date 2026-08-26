@@ -7,6 +7,7 @@ interface IImage{
 }
 
 interface IRecipe{
+  category: RecipeCategory;
     title: string,
     note?: string,
     description: string,
@@ -15,8 +16,25 @@ interface IRecipe{
     user?: string;
 }
 
+export const RECIPE_CATEGORIES = [
+  "hostel-station",
+  "mumma-wala-swad",
+  "lazy-corner",
+  "gym-rat-fuel",
+  "no-oil-zone",
+] as const;
+
+export type RecipeCategory = typeof RECIPE_CATEGORIES[number];
+
 const recipeSchema = new Schema<IRecipe>(
     {
+        category: {
+          type: String,
+          enum: RECIPE_CATEGORIES,
+          required: true,
+          default: "mumma-wala-swad",
+          index: true,
+        },
         user: { type: SchemaTypes.ObjectId, ref: "User" },
         title: { type: String, required: true, index: true },
         description: { type: String, required: true, index: true },

@@ -20,7 +20,10 @@ instance.interceptors.response.use(
     return response;
   },
   (error) => {
-    if (error.response.status === 401) {
+    const requestUrl = error.config?.url || "";
+    const isAuthRequest = requestUrl.includes("/auth/login") || requestUrl.includes("/auth/signup");
+
+    if (error.response?.status === 401 && !isAuthRequest) {
       sessionStorage.clear();
       cogoToast.warn("Session timed out");
       window.location.href = "/";
@@ -45,7 +48,7 @@ instance.interceptors.response.use(
       return;
     }
     if (error.response.status >= 300) {
-      return cogoToast.error(
+      cogoToast.error(
         !!error.response.data.error
           ? error.response.data.error
           : "check your internet connection"

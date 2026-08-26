@@ -6,12 +6,18 @@ import { AddRecipe, Home, More, MyRecipes } from "./pages/Dashboard";
 import { ErrorPage } from "./pages/Error";
 import { Landing } from "./pages/Landing";
 import { AuthenticationContextProvider } from "./context/auth-context";
+import { DesignTokens } from "./pages/DesignTokens";
 
 function App() {
   const router = createBrowserRouter([
     {
       path: "/",
       element: <Landing />,
+      errorElement: <ErrorPage />,
+    },
+    {
+      path: "/design-tokens",
+      element: <DesignTokens />,
       errorElement: <ErrorPage />,
     },
     {

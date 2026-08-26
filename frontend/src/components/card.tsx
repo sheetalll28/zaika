@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { IRECIPEUSER } from "../@types";
 import { Button } from "./button";
@@ -11,6 +11,7 @@ export const RecipeCard = ({
   image,
   description,
   user,
+  category,
 }: IRECIPEUSER) => {
   const navigate = useNavigate();
   const handleViewMore = (id: string) => {
@@ -18,13 +19,13 @@ export const RecipeCard = ({
   };
   return (
     <Card
-      id={_id}
       title={title}
       image={image?.url}
       note={note}
       ingredients={ingredients}
       description={description}
       email={user}
+      category={category || "recipe"}
       avatar="https://plus.unsplash.com/premium_vector-1713201017274-e9e97d783e75?q=80&w=1800&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     >
       <div className="flex justify-end">
@@ -41,7 +42,6 @@ export const RecipeCard = ({
 };
 
 export const Card = ({
-  id,
   avatar,
   image,
   title,
@@ -49,10 +49,11 @@ export const Card = ({
   email,
   ingredients,
   note,
+  category,
   children,
   isFull = false,
 }: {
-  id: string;
+  id?: string;
   avatar: string;
   image: string;
   description: string;
@@ -60,17 +61,18 @@ export const Card = ({
   email: string;
   ingredients: string;
   note?: string;
+  category?: string;
   children?: ReactNode;
   isFull?: boolean;
 }) => {
   return (
     <div
-      className={`w-full ${
-        isFull ? "md:w-[50%]" : "md:w-[14rem] "
-      } bg-zinc-900  
+      className={`min-w-0 w-full ${
+        isFull ? "" : ""
+      } bg-[var(--ink)]
       transition ease-in-out delay-150
-      hover:translate-x-6 
-      hover:scale-100
+      hover:-translate-y-1
+      hover:scale-[1.01]
       duration-300
       mb-4
       `}
@@ -78,56 +80,44 @@ export const Card = ({
       <img
         src={image}
         alt={"A picture of " + title}
-        className={`w-full ${
-          isFull ? "md:w-full" : "md:w-[14rem] "
-        } h-full md:[10rem] ${
-          isFull ? "md:h-[20rem]" : "md:h-[14rem]"
-        } object-cover`}
+        className={`aspect-[4/3] w-full object-cover ${isFull ? "md:aspect-[16/9]" : ""}`}
       />
       <div
-        className={`p-2 bg-zinc-900 w-full ${
-          isFull ? "md:w-full" : "md:w-[14rem] "
-        } h-15rem] overflow-clip my-3`}
+        className="min-w-0 w-full overflow-hidden bg-[var(--ink)] p-3"
       >
         <div className="flex gap-4 items-start w-full">
           <img
-            className="h-12 w-12 object-cover rounded-full"
+            className="h-10 w-10 shrink-0 rounded-full object-cover"
             src={avatar}
             alt={"A picture of user"}
           />
           <div className="text-left">
-            <p className="text-orange-500 font-light">{email}</p>
+            <p className="max-w-full truncate text-sm text-[var(--saffron)]">{email}</p>
           </div>
         </div>
         <h2
-          className={`text-orange-500 font-bold my-2 text-xl  ${
-            !isFull && "truncate overflow-hidden ..."
-          } `}
+          className="my-2 truncate text-xl font-display font-semibold text-[var(--saffron)]"
         >
           {title}
         </h2>
-        <p className="text-orange-500 font-light text-sm">
-          ingredients:{" "}
-          <span
-            className={`text-white  ${
-              !isFull && "truncate overflow-hidden ..."
-            }`}
-          >
+        <span className="mb-2 inline-block rounded-full border border-[var(--saffron)]/50 px-2 py-1 text-[10px] uppercase tracking-[0.12em] text-[var(--saffron)]">
+          {category ? category.split("-").join(" ") : "Recipe"}
+        </span>
+        <p className="line-clamp-2 text-sm text-[var(--cream-dim)]">
+          ingredients: <span className="text-[var(--cream)]">
             {ingredients}
           </span>
         </p>
 
         <p
-          className={`text-white font-light text-sm my-2 ${
-            !isFull && "truncate overflow-hidden ..."
-          }`}
+          className="my-2 line-clamp-2 text-sm text-[var(--cream-dim)]"
         >
           {description}
         </p>
 
         {note && (
-          <p className="text-orange-500 font-light text-sm py-1 md:py-4">
-            note: <span className="text-white">{note}</span>
+            <p className="py-1 text-sm text-[var(--saffron)] md:py-4">
+            note: <span className="text-[var(--cream)]">{note}</span>
           </p>
         )}
         {children}

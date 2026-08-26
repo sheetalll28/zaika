@@ -17,6 +17,7 @@ export const useRecipe = () => {
       }
     } catch (error) {
       console.log(error);
+      throw error;
     } finally {
       setLoading(false);
     }
@@ -29,7 +30,10 @@ export const useRecipe = () => {
     const payloadToArray = Object.keys(rest);
 
     for (const item of payloadToArray) {
-      formData.append(item, rest[item as keyof typeof rest]);
+      const value = rest[item as keyof typeof rest];
+      if (value !== undefined) {
+        formData.append(item, value);
+      }
     }
     if (note) {
       formData.append("note", note);
@@ -40,6 +44,7 @@ export const useRecipe = () => {
       await instance.post("/recipe/create", formData);
     } catch (error) {
       console.log(error);
+      throw error;
     } finally {
       setLoading(false);
     }

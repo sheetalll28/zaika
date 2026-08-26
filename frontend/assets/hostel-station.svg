@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <rect width="400" height="400" rx="48" fill="#241417"/>
+  <circle cx="200" cy="200" r="150" fill="none" stroke="#E3A23C" stroke-width="3" opacity="0.35"/>
+
+  <!-- steam -->
+  <path d="M108,148 Q100,132 110,120 Q120,108 112,94" fill="none" stroke="#E3A23C" stroke-width="6" stroke-linecap="round" opacity="0.75"/>
+  <path d="M138,142 Q130,126 140,114 Q150,102 142,88" fill="none" stroke="#E3A23C" stroke-width="6" stroke-linecap="round" opacity="0.75"/>
+
+  <!-- kettle handle -->
+  <path d="M262,196 Q296,196 296,226 Q296,258 260,250" fill="none" stroke="#E3A23C" stroke-width="9" stroke-linecap="round"/>
+
+  <!-- kettle spout -->
+  <path d="M146,196 Q110,190 100,158" fill="none" stroke="#E3A23C" stroke-width="9" stroke-linecap="round"/>
+
+  <!-- kettle body -->
+  <path d="M138,196 L262,196 L262,180 Q262,168 250,168 L150,168 Q138,168 138,180 Z" fill="none" stroke="#E3A23C" stroke-width="9" stroke-linejoin="round"/>
+  <path d="M136,196 Q136,262 200,262 Q264,262 264,196" fill="none" stroke="#E3A23C" stroke-width="9" stroke-linecap="round"/>
+
+  <!-- lid knob -->
+  <ellipse cx="200" cy="163" rx="20" ry="7" fill="none" stroke="#E3A23C" stroke-width="7"/>
+  <circle cx="200" cy="150" r="6" fill="#E3A23C"/>
+</svg>

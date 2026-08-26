@@ -1,4 +1,5 @@
 export interface SEARCH_RECIPES {
+    category: string;
     user: SEARCH_USER[];
     note: string;
     description: string;
@@ -8,6 +9,7 @@ export interface SEARCH_RECIPES {
 }
 
 export interface SEARCH_RECIPES_RESPONSE {
+    category: string;
     user: string;
     note: string;
     description: string;

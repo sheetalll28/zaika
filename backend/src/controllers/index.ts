@@ -1,10 +1,11 @@
-import { registerOrLogin } from "./auth";
+import { login, signup } from "./auth";
 import {
   getAllRecipes,
   getRecipe,
   getUserRecipes,
   searchRecipe,
   createRecipe,
+  getLatestRecipe,
 } from "./recipe";
 
 export {
@@ -12,6 +13,8 @@ export {
   getRecipe,
   getUserRecipes,
   searchRecipe,
-  registerOrLogin,
+  login,
+  signup,
+  getLatestRecipe,
   createRecipe,
 };

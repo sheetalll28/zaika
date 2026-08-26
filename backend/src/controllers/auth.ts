@@ -25,29 +25,38 @@ const signToken = (id: string) => {
 };
 
 
-export const registerOrLogin = async (req: Request, res: Response) => {
-    const { email, password }: { email: string; password: string } = req.body;
+export const signup = async (req: Request, res: Response) => {
+    const { username, email, password }: { username: string; email: string; password: string } = req.body;
     try {
-        const _user = await User.findOne({ email }).select("+password").exec();
-
-        if (_user) {
-            const isPasswordValid = await bcrypt.compare(password, _user.password as string);
-            
-            if (!isPasswordValid) {
-                return res.status(400).json({ error: "Invalid email or password" });
-            }
-
-            const token = signToken(_user._id.toString());
-            return res.status(200).json({ token, email, id: _user._id });
+        const existingUser = await User.findOne({ $or: [{ email }, { username }] }).exec();
+        if (existingUser) {
+            return res.status(409).json({ error: "That username or email is already in use" });
         }
 
         const hashedPassword = await bcrypt.hash(password, CONSTANTS.SALT);
-        const newUser = await User.create({ email, password: hashedPassword });
+        const newUser = await User.create({ username, email, password: hashedPassword });
 
-        const token = signToken(newUser._id.toString());
-        return res.status(201).json({ token, email: newUser.email, id: newUser._id });
+        return res.status(201).json({ message: "Account created successfully", username: newUser.username, email: newUser.email });
     } catch (error) {
-        console.error("Error in registerOrLogin:", error);
+        console.error("Error in signup:", error);
+        return res.status(500).json({ error: "An error occurred while processing your request" });
+    }
+};
+
+export const login = async (req: Request, res: Response) => {
+    const { identifier, password }: { identifier: string; password: string } = req.body;
+    try {
+        const user = await User.findOne({
+            $or: [{ email: identifier.toLowerCase() }, { username: identifier }],
+        }).select("+password").exec();
+        if (!user || !(await bcrypt.compare(password, user.password))) {
+            return res.status(401).json({ error: "Invalid email or password" });
+        }
+
+        const token = signToken(user._id.toString());
+        return res.status(200).json({ token, username: user.username, email: user.email, id: user._id });
+    } catch (error) {
+        console.error("Error in login:", error);
         return res.status(500).json({ error: "An error occurred while processing your request" });
     }
 };

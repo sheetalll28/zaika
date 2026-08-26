@@ -6,6 +6,7 @@ import {
   getUserRecipes,
   createRecipe,
   searchRecipe,
+  getLatestRecipe,
 } from "./../controllers";
 import { validate } from "../middlewares";
 import {
@@ -16,6 +17,8 @@ import {
 } from "../routes/schema-validations";
 
 const router = express.Router();
+
+router.get("/recent", getLatestRecipe);
 
 router.get(
   "/find",
